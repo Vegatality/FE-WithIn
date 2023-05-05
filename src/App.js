@@ -1,9 +1,11 @@
 import QuillEditor from "./components/QuillEditor";
 
+import { Router } from "./shared/Router";
+
 function App() {
   return (
     <div className="App">
-      <QuillEditor />
+      <Router />
     </div>
   );
 }
