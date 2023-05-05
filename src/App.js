@@ -1,11 +1,15 @@
 import QuillEditor from "./components/QuillEditor";
+import Router from "./shared/Router";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient();
 
 function App() {
-  return (
-    <div className="App">
-      <QuillEditor />
-    </div>
-  );
+    return (
+        <QueryClientProvider client={queryClient}>
+            <Router />
+        </QueryClientProvider>
+    );
 }
 
 export default App;
