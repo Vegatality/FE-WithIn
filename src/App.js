@@ -1,5 +1,5 @@
 import QuillEditor from "./components/QuillEditor";
-import Router from "./shared/Router";
+import { Router } from "./shared/Router";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 const queryClient = new QueryClient();

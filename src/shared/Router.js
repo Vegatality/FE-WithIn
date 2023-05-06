@@ -1,18 +1,26 @@
-import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Header from "../components/Header";
-import Login from "../pages/Login";
+import { Layout } from "./Layout";
+import { Signup } from "../pages/Signup";
+import { Login } from "../pages/Login";
+import { Mypage } from "../pages/Mypage";
+import { MainPage } from "../pages/MainPage";
+import { BoardDetails } from "../pages/BoardDetails";
 
-function Router() {
+export const Router = () => {
     return (
         <BrowserRouter>
-            <Header />
-            <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route />
-            </Routes>
+            <Layout>
+                <Routes>
+                    <Route path="/" element={<MainPage />} />
+                    <Route path="/signup" element={<Signup />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/mypage" element={<Mypage />} />
+                    <Route
+                        path="/within/boards/:id"
+                        element={<BoardDetails />}
+                    />
+                </Routes>
+            </Layout>
         </BrowserRouter>
     );
-}
-
-export default Router;
+};
