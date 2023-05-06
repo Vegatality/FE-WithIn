@@ -7,17 +7,20 @@ import { MainPage } from "../pages/MainPage";
 import { BoardDetails } from "../pages/BoardDetails";
 
 export const Router = () => {
-  return (
-    <BrowserRouter>
-      <Layout>
-        <Routes>
-          <Route path="/within/" element={<MainPage />} />
-          <Route path="/within/signup" element={<Signup />} />
-          <Route path="/within/login" element={<Login />} />
-          <Route path="/within/mypage" element={<Mypage />} />
-          <Route path="/within/boards/:id" element={<BoardDetails />} />
-        </Routes>
-      </Layout>
-    </BrowserRouter>
-  );
+    return (
+        <BrowserRouter>
+            <Layout>
+                <Routes>
+                    <Route path="/" element={<MainPage />} />
+                    <Route path="/signup" element={<Signup />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/mypage" element={<Mypage />} />
+                    <Route
+                        path="/within/boards/:id"
+                        element={<BoardDetails />}
+                    />
+                </Routes>
+            </Layout>
+        </BrowserRouter>
+    );
 };

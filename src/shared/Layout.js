@@ -1,12 +1,12 @@
 import { Footer } from "../components/Footer";
-import { Header } from "../components/Header";
+import Header from "../components/Header";
 
 export const Layout = ({ children }) => {
   return (
-    <div>
+    <div className="h-screen">
       <Header />
-      {children}
-      <Footer />
+      <div className="mx-auto mt-10 max-w-7xl">{children}</div>
+      {/* <Footer /> */}
     </div>
   );
 };
