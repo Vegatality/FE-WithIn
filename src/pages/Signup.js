@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
-import { signUpDb } from "../api/autth";
+import { signUpDb } from "../api/auth";
 import { useInput } from "../hooks/useInput";
 import { AuthenticationInputCard } from "../components/assets/InputField";
+import { HiLogin } from "react-icons/hi";
 
 export const Signup = () => {
     const navigate = useNavigate();
@@ -30,10 +31,9 @@ export const Signup = () => {
             // setIsError({ error: false, message: "" });
             onClearHandler();
 
-            // 회원가입 성공하면 로그인 창으로
-            movetoLogin();
-
             setIsAdmin(false);
+            // 회원가입 성공하면 로그인 창으로
+            // movetoLogin();
         },
         onError: (error) => {
             console.log(error);
@@ -45,110 +45,102 @@ export const Signup = () => {
 
     const onResisterHandler = () => {
         // isAdmin 이 false 상태면 일반 회원 등록 모드
+        const data = {
+            ...inputs,
+            admin: isAdmin,
+        };
+        console.log(data);
+
         if (isAdmin) {
             if (
                 inputs.username === "" ||
                 inputs.email === "" ||
                 inputs.password === "" ||
-                inputs.admin === "" ||
                 inputs.adminKey === ""
             ) {
                 //developer 확인용 alert
                 console.log("admin mode");
                 alert("공백은 만들 수 없습니다.");
                 return;
+            } else if (inputs.password !== checkPassword.password) {
+                // developer 확인용.
+                alert("비밀번호가 일치하지 않습니다!");
+                return;
             } else {
-                mutation.mutate(inputs); // useMutation() onSuccess 로 옮김.
+                console.log("admin 데이터 전송");
+                mutation.mutate(data); // useMutation() onSuccess 로 옮김.
+                onClearHandler();
+                onClearCheckPassword();
+                // setIsAdmin(false);
             }
         } else {
             if (
                 inputs.username === "" ||
                 inputs.email === "" ||
-                inputs.password === "" ||
-                inputs.admin === ""
+                inputs.password === ""
             ) {
                 //developer 확인용 alert
                 console.log("user mode");
                 alert("공백은 만들 수 없습니다.");
                 return;
+            } else if (inputs.password !== checkPassword.password) {
+                // developer 확인용.
+                alert("비밀번호가 일치하지 않습니다!");
+                return;
             } else {
-                mutation.mutate(inputs); // useMutation() onSuccess 로 옮김.
+                console.log("user 데이터 전송");
+                mutation.mutate(data); // useMutation() onSuccess 로 옮김.
+                onClearHandler();
+                onClearCheckPassword();
             }
         }
     };
 
     return (
-        <div className="flex  justify-center ">
-            <div className="rounded-md space-y-6 flex flex-col items-center w-full max-w-xl bg-backgroundPurple py-16 parent text-commomTextColor">
+        <div className="flex  justify-center">
+            <div className="rounded-md space-y-6 flex flex-col items-center w-full max-w-xl bg-backgroundPurple py-16 parent text-commomTextColor relative ">
+                <HiLogin
+                    onClick={() => movetoLogin()}
+                    className="absolute top-5 left-5 text-3xl hover:text-textPurple"
+                />
                 <div className="text-4xl mb-5 font-bold text-commomTextColor">
                     SIGN UP
                 </div>
+
                 <AuthenticationInputCard
-                    inputs={inputs}
+                    value={inputs.username}
                     name="username"
                     placeholder="이름을 입력해주세요"
                     onChangeHandler={onChangeHandler}
                     title="Username"
+                    onClearHandler={onClearHandler}
                 />
-
                 <AuthenticationInputCard
-                    inputs={inputs}
+                    value={inputs.email}
                     name="email"
                     placeholder="메일주소를 입력해주세요"
                     onChangeHandler={onChangeHandler}
                     title="E-mail"
                 />
                 <AuthenticationInputCard
-                    inputs={inputs}
+                    value={inputs.password}
                     name="password"
                     placeholder="비밀번호를 입력해주세요"
                     onChangeHandler={onChangeHandler}
                     title="Password"
                     type="password"
                 />
-                {/* <div className="w-full  px-6  flex flex-col items-center">
-                    <div className="w-2/3 flex items-center justify-between ml-5">
-                        <div className="text-lg font-bold self-start  mb-1">
-                            Password
-                        </div>
-                    </div>
-                    <input
-                        className="w-2/3 p-3 rounded-md"
-                        type="password"
-                        autoComplete="on"
-                        placeholder="비밀번호를 입력해주세요"
-                        value={inputs.password}
-                        onChange={onChangeHandler}
-                    />
-                </div> */}
-
                 <AuthenticationInputCard
-                    inputs={checkPassword}
+                    value={checkPassword.password}
                     name="password"
                     placeholder="비밀번호를 재입력 해주세요"
                     onChangeHandler={setCheckPassword}
                     title="Password 확인"
                     type="password"
                 />
-
-                {/* <div className="w-full  px-6  flex flex-col items-center">
-                    <div className="w-2/3 flex items-center justify-between ml-5">
-                        <div className="text-lg font-bold self-start mb-1">
-                            Password 확인
-                        </div>
-                    </div>
-                    <input
-                        className="w-2/3 p-3 rounded-md"
-                        type="password"
-                        autoComplete="on"
-                        placeholder="비밀번호를 재입력 해주세요"
-                        value={checkPassword.password}
-                        onChange={setCheckPassword}
-                    />
-                </div> */}
                 {!isAdmin ? (
                     <div className="w-full  px-6  flex flex-col items-center">
-                        <div className="text-lg text-questionTextGray my-2">
+                        <div className="text-lg text-questionTextGray my-1">
                             관리자이신가요?{" "}
                             <span
                                 className="text-[#b185dd] cursor-pointer"
@@ -174,18 +166,17 @@ export const Signup = () => {
                         <input
                             className="w-2/3 p-3 rounded-md"
                             type="password"
-                            autoComplete="on"
+                            name="adminKey"
                             placeholder="admin key를 등록해주세요"
                             value={inputs.adminKey}
                             onChange={onChangeHandler}
                         />
                     </div>
                 )}
-
-                <div className=" w-1/3 ">
+                <div className=" w-2/3 px-4">
                     <button
-                        className="text-lg font-bold text-white bg-buttonPurple cursor-pointer py-2.5 px-3.5 w-full rounded-md hover:bg-[#826b99] transition duration-300"
-                        onClick={movetoLogin}
+                        className="text-lg font-bold text-white bg-buttonPurple cursor-pointer py-2.5 px-3.5 w-full rounded-md hover:bg-[#826b99] transition duration-300 mb-1 shadow-md"
+                        onClick={onResisterHandler}
                     >
                         Signup
                     </button>

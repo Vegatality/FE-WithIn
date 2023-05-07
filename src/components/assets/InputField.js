@@ -17,7 +17,7 @@ const AuthPageInputTag = ({ title }) => {
 };
 
 const AuthPageInput = ({
-    inputs,
+    value,
     name,
     type = "text",
     placeholder,
@@ -26,11 +26,11 @@ const AuthPageInput = ({
     return (
         <>
             <input
-                className="w-2/3 p-3 rounded-md"
+                className="w-2/3 p-3 rounded-md outline-none focus:ring-2 focus: ring-mainPurple"
                 name={name}
                 type={type}
                 placeholder={placeholder}
-                value={inputs.name}
+                value={value}
                 onChange={onChangeHandler}
             />
         </>
@@ -38,7 +38,7 @@ const AuthPageInput = ({
 };
 
 export const AuthenticationInputCard = ({
-    inputs,
+    value,
     name,
     title,
     placeholder,
@@ -49,7 +49,7 @@ export const AuthenticationInputCard = ({
         <AuthPageCardWrapper>
             <AuthPageInputTag title={title} />
             <AuthPageInput
-                inputs={inputs}
+                value={value}
                 name={name}
                 type={type}
                 placeholder={placeholder}
