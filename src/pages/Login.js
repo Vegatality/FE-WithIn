@@ -5,8 +5,9 @@ import { useDispatch } from "react-redux";
 import { useMutation } from "react-query";
 import { signInDb } from "../api/auth";
 import jwtDecode from "jwt-decode";
-import { Cookies } from "js-cookie";
+import Cookies from "js-cookie";
 import { AuthenticationInputCard } from "../components/assets/InputField";
+import { SET_TOKEN } from "../redux/modules/authSlice";
 
 export const Login = () => {
     const navigate = useNavigate();
@@ -17,8 +18,6 @@ export const Login = () => {
         navigate("/mypage");
     };
 
-    // const [isMember, setIsMember] = useState(true);
-    // const [isRegistering, setIsRegistering] = useState(false);
     const [inputs, setInputChange, onClearInput] = useInput({
         email: "",
         password: "",
@@ -35,57 +34,50 @@ export const Login = () => {
     const mutate2 = useMutation(signInDb, {
         onMutate: () => {
             //mutationFunction인 signIndb가 실행되기 전에 실행. mutationFunc가 받을 동일한 변수가 전달됨.
-            console.log("useMutation의 onMutate");
+            console.log("useMutation의 onMutate, 서버에 요청 시작합니다!");
         },
         onSuccess: (data) => {
+            // ---------------------------입력 초기화---------------------------
             onClearInput();
-            console.log("useMutation의 onSuccess");
+
+            // ---------------------------서버에서 가져온 데이터 확인하기---------------------------
             console.log("data : ", data);
+            const { username } = data.data;
+            alert(`로그인 성공! 환영합니다 ${username}님`);
+
+            // ---------------------------토큰 해체 및 쿠키에 저장.---------------------------
+            const token = data.headers.authorization.split(" ")[1];
             moveToMyPage();
-            // const { token } = data.data;
-            // // console.log(jwtDecode(token)); // {id: 'gkdgo99', iat: 1683075561, exp: 1683079161}  두 번째는 발급시간, 세 번째는 유효기간
-            // const decodedToken = jwtDecode(token);
-            // const { id, exp } = decodedToken;
+            // console.log(jwtDecode(token)); // {id: 'gkdgo99', iat: 1683075561, exp: 1683079161}  두 번째는 발급시간, 세 번째는 유효기간
+            const decodedToken = jwtDecode(token);
+            const { id, exp } = decodedToken;
+            const expireDate = new Date(exp * 1000); // 날짜단위로 변환해서 넣기.
+            Cookies.set("access", token, {
+                expires: expireDate,
+            });
 
-            // // path (string) : 쿠키 경로, / 모든 경로 페이지에서 쿠키에 액세스할 수 있도록 하려면 경로로 사용
-            // // expires (Date) : 쿠키의 절대 만료 날짜
-            // // maxAge (number) : 클라이언트가 쿠키를 수신한 시점부터 쿠키의 상대적인 최대 수명(초)
-            // // secure (boolean) : HTTPS를 통해서만 액세스할 수 있습니까?
+            // ---------------------------Reducer 에서 토큰 관리할 것임. useName도 Page 넘어갈 때마다 useSelector로 받을 수 있게 넘기는 거 ------------------------------------------------------
+            // --------------------------- 페이지 넘어갈 때 Reducer에서 토큰 꺼내와서 살아있는지 확인할 거임. ------------------------------------------------------
+            dispatch(SET_TOKEN({ authenticated: true, username: id }));
+            // setIsError({ error: false, message: "" });
 
-            // ⭐JSCookie
-            // Cookies.set("쿠키이름", "토큰 그 자체", {
-            //     expires: "Date변수",
-            // })  //쿠키에 저장.
-
-            // const expireDate = new Date(exp * 1000); // 날짜단위로 변환해서 넣기.
-
-            // cookie.set("todos", token, {
-            //     path: "/",
-            //     // secure: "/",
-            //     expires: expireDate,
-            //     // expires: 3000,
-            //     // maxAge: 500, // maxAge는 숫자 1이 1초
-            //     // expires: new Date().getMinutes() + 1,
-            // });
-            // // setIsError({ error: false, message: "" });
-            // // dispatch(SET_TOKEN({ authenticated: true, userId: id }));
-            // // loginComplete();
+            // 페이지 이동
+            moveToMyPage();
         },
         onError: (error) => {
             console.log(error);
+            alert(error.data.message);
+            // setIsError({ error: false, message: "" });
         },
     });
 
     const onLoginHandler = () => {
         if (inputs.id !== "" && inputs.password !== "") {
-            // mutate2.mutate(inputs);
             mutate2.mutate(inputs);
         } else {
             console.log(inputs);
             alert("공백은 불가능합니다!");
         }
-        // if (inputs.id === "" || inputs.password === "") {
-        //     alert("공백은 불가능합니다!");
     };
 
     return (
@@ -109,6 +101,7 @@ export const Login = () => {
                     onChangeHandler={setInputChange}
                     title="Password"
                     onClearHandler={onClearInput}
+                    type="password"
                 />
                 <div className="w-2/3 p-3 px-4 rounded-md">
                     <button
