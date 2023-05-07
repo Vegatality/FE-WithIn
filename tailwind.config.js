@@ -9,6 +9,7 @@ const colors = {
 };
 
 module.exports = {
+
     content: ["./src/**/*.{js,jsx,ts,tsx}"],
     theme: {
         backgroundColor: {
@@ -30,7 +31,7 @@ module.exports = {
             // default: colors.mainPurple,
         },
         extend: {},
-    },
+  },
 
-    plugins: [],
+  plugins: [],
 };
