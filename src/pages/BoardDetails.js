@@ -1,28 +1,26 @@
-import React, { useState } from "react";
 import { BoardCommentCard } from "../components/BoardDetails/BoardCommentCard";
+import { BoardAddComment } from "../components/BoardDetails/BoardAddComment";
+import { useSelector } from "react-redux";
 
 export const BoardDetails = () => {
-  const [comments, setComments] = useState([
-    { username: "닉네임 1", text: "" },
-    { username: "닉네임 2", text: "" },
-    { username: "닉네임 3", text: "" },
-  ]);
+  const comments = useSelector((state) => state.commentsSlice);
+  console.log(comments);
 
   return (
     <div className="flex flex-col items-center">
-      <div className="w-full max-w-xl bg-purple-100 shadow rounded-md p-6 my-4 flex flex-col items-center">
-        <div className="rounded-full bg-gray-200 w-12 h-12 mb-4"></div>
+      <div className="w-full max-w-sm bg-backgroundPurple rounded-md p-6 my-4 flex flex-col items-center shadow">
+        <div className="rounded-full bg-mainPurple w-24 h-24 mb-4 shadow-lg"></div>
         <div className="text-center">
-          <h2 className="text-lg font-bold">Username</h2>
-          <p className="text-gray-500">Event info</p>
+          <h2 className="text-lg font-bold text-commomTextColor">Username</h2>
+          <p className="text-gray-400">Event info</p>
         </div>
       </div>
-
-      <div className="w-full max-w-xl bg-purple-100 shadow rounded-md px-4 py-6 my-4">
+      <div className="w-full max-w-3xl bg-backgroundPurple rounded-md px-4 py-6 my-4 shadow">
         <h2 className="text-lg font-bold mb-4">Comments</h2>
-        <div className="space-y-8">
-          {comments.map((comment, index) => (
-            <BoardCommentCard key={index} comments={comments} index={index} comment={comment} setComments={setComments} />
+        <BoardAddComment />
+        <div className="space-y-6">
+          {comments.map((comment) => (
+            <BoardCommentCard key={comment.id} comment={comment} />
           ))}
         </div>
       </div>

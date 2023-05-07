@@ -2,48 +2,73 @@ import { useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 import DOMPurify from "dompurify";
+import { FaEdit, FaSave, FaTrashAlt } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { deleteComment, editComment } from "../../redux/modules/commentsSlice";
 
-export const BoardCommentCard = ({ comments, index, comment, setComments }) => {
-  const [editingCommentIndex, setEditingCommentIndex] = useState(false);
-  const [value, setValue] = useState("");
-  const handleEditComment = (index, newText) => {
-    const newComments = [...comments];
-    newComments[index].text = newText;
-    setComments(newComments);
-    setEditingCommentIndex(false);
+export const BoardCommentCard = ({ comment }) => {
+  const [editingComment, setEditingComment] = useState(false);
+
+  // { username: "New User", text: "hello", id: 4 }
+  const [commentState, setCommentState] = useState({ ...comment });
+
+  const dispatch = useDispatch();
+  const handleEditComment = (newText) => {
+    console.log("newtext", newText);
+    console.log("commentState", commentState);
+    if (newText.trim() === "") {
+      return;
+    }
+    dispatch(editComment({ ...commentState }));
+    setEditingComment(false);
   };
-  const handleInputChange = (newValue) => {
-    setValue(newValue);
+
+  const handleInputChange = (newText) => {
+    console.log(newText);
+    setCommentState({ ...commentState, text: newText });
+  };
+
+  const handleDeleteComment = (id) => {
+    dispatch(deleteComment(id));
+  };
+
+  const toolbar = {
+    container: [["bold", "italic", "underline"]],
+    handlers: {},
   };
 
   return (
-    <div className="flex-grow ">
-      <div className="flex items-center justify-between">
-        <div className="flex">
-          <div className="rounded-full bg-gray-200 w-8 h-8 mr-2"></div>
-          <h3 className="font-bold">{comment.username}</h3>
-          <p className="text-xs ml-3 pt-1">2023-05-06 11:20</p>
+    <div className="flex mx-3 mt-3 animate__animated animate__bounceIn">
+      <div className="rounded-full bg-mainPurple w-12 h-12 mr-2 shadow-lg"></div>
+      <div className="w-full">
+        <div className="flex items-center justify-between mb-3 mr-7">
+          <div className="flex items-center">
+            <h3 className="font-bold text-sm">{comment.username}</h3>
+            <p className="text-xs ml-3 text-gray-500">{comment.date}</p>
+          </div>
+          {editingComment ? (
+            <div className="flex items-center">
+              <FaSave className="text-textPurple cursor-pointer text-lg mr-2" onClick={() => handleEditComment(commentState.text)} />
+              <FaTrashAlt className="text-textPurple cursor-pointer text-lg" onClick={() => handleDeleteComment(comment.id)} />
+            </div>
+          ) : (
+            <div className="flex items-center">
+              <FaEdit className="text-textPurple cursor-pointer text-lg mr-2" onClick={() => setEditingComment(true)} />
+              <FaTrashAlt className="text-textPurple cursor-pointer text-lg" onClick={() => handleDeleteComment(comment.id)} />
+            </div>
+          )}
         </div>
-        {editingCommentIndex === index ? (
-          <button className="text-blue-500" onClick={() => handleEditComment(index, value)}>
-            Save
-          </button>
+        {editingComment ? (
+          <ReactQuill
+            className=" bg-white rounded-sm mr-7 shadow-md"
+            defaultValue={commentState.text}
+            onChange={handleInputChange}
+            modules={{ toolbar }}
+          ></ReactQuill>
         ) : (
-          <button className="text-blue-500" onClick={() => setEditingCommentIndex(index)}>
-            Edit
-          </button>
+          <p className="px-3 py-3 bg-white rounded text-sm mr-7 shadow-md" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comment.text) }}></p>
         )}
       </div>
-      {editingCommentIndex === index ? (
-        <ReactQuill
-          className="mx-8 bg-white"
-          defaultValue={comment.text}
-          onChange={handleInputChange}
-          style={{ borderRadius: "6px", padding: "-1px", border: "none", overflow: "hidden" }}
-        />
-      ) : (
-        <p className="mx-10 px-3 py-1 bg-white rounded" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comment.text) }}></p>
-      )}
     </div>
   );
 };
