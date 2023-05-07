@@ -8,18 +8,25 @@ import Cookies from "js-cookie";
 
 /* 토큰확인 */
 // 매 페이지마다 확인
-const checkAuth = async () => {
-  const authToken = Cookies.get("access");
-  // Cookies.remove("쿠키이름")
-  const config = {
-    headers: {
-      // authorization: `Bearer ${authToken}`,
-    },
-  };
 
-  const response = await axios.get(`${process.env.REACT_APP_TEST_SERVER_URL}/within/user`, config);
-  return response;
-};
+// const checkAuth = async () => {
+//     // Cookies.remove("쿠키이름")
+//     const authToken = Cookies.get("access");
+
+//     console.log(authToken);
+
+//     const config = {
+//         headers: {
+//             authorization: `Bearer ${authToken}`,
+//         },
+//     };
+
+//     const response = await axios.get(
+//         `${process.env.REACT_APP_TEST_SERVER_URL}/user`,
+//         config
+//     );
+//     return response;
+// };
 
 /* 회원가입 */
 // axios 옵션 객체로 넣기
@@ -49,4 +56,4 @@ const signInDb = async (inputs) => {
   return response;
 };
 
-export { signUpDb, signInDb, checkAuth };
+export { signUpDb, signInDb };

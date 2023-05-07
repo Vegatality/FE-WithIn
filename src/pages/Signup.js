@@ -12,28 +12,42 @@ export const Signup = () => {
         navigate("/login");
     };
     const [isAdmin, setIsAdmin] = useState(false);
-    const [inputs, onChangeHandler, onClearHandler] = useInput({
+
+    // ## 정보 작성 ##
+    const [inputs, onChangeHandler, onClearHandler, adminCancel] = useInput({
         username: "",
         email: "",
         password: "",
         admin: false,
         adminKey: "",
     });
+
+    // ## 비밀번호 재확인 ##
     const [checkPassword, setCheckPassword, onClearCheckPassword] = useInput({
         password: "",
     });
 
-    // ------------------------SignUP---------------------------
+    // --------------------------------------------- 취소 버튼 누르면 adminKey입력 해놓은 거 초기화 되게 설정----------------------------------------------------
+    const adminCancelHandler = () => {
+        adminCancel();
+        setIsAdmin(false);
+    };
+
+    // ------------------------------------------------------------SignUP-----------------------------------------------------------------------------------
     // const queryClient = useQueryClient();
     const mutation = useMutation(signUpDb, {
         onSuccess: (data) => {
+            // 데이터 받아오기
             console.log("회원가입 성공! >>> ", data); // 등록되면 true
             // setIsError({ error: false, message: "" });
-            onClearHandler();
 
+            // 성공하면 전부 초기화
+            onClearHandler();
+            onClearCheckPassword();
             setIsAdmin(false);
-            // 회원가입 성공하면 로그인 창으로
-            // movetoLogin();
+
+            // 회원가입 성공하면 바로 로그인 창으로
+            movetoLogin();
         },
         onError: (error) => {
             console.log(error);
@@ -68,12 +82,10 @@ export const Signup = () => {
                 return;
             } else {
                 console.log("admin 데이터 전송");
-                mutation.mutate(data); // useMutation() onSuccess 로 옮김.
-                onClearHandler();
-                onClearCheckPassword();
-                // setIsAdmin(false);
+                mutation.mutate(data);
             }
         } else {
+            // 취소 눌렀을 때 adminkey 초기화 되게 해놔야 함.
             if (
                 inputs.username === "" ||
                 inputs.email === "" ||
@@ -90,8 +102,6 @@ export const Signup = () => {
             } else {
                 console.log("user 데이터 전송");
                 mutation.mutate(data); // useMutation() onSuccess 로 옮김.
-                onClearHandler();
-                onClearCheckPassword();
             }
         }
     };
@@ -158,7 +168,7 @@ export const Signup = () => {
                             </div>
                             <span
                                 className="mr-5 text-textPurple font-medium cursor-pointer"
-                                onClick={() => setIsAdmin(!isAdmin)}
+                                onClick={adminCancelHandler}
                             >
                                 취소
                             </span>

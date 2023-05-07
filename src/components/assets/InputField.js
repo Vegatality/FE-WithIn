@@ -56,19 +56,5 @@ export const AuthenticationInputCard = ({
                 onChangeHandler={onChangeHandler}
             />
         </AuthPageCardWrapper>
-        // <div className="w-full  px-6  flex flex-col items-center">
-        //     <div className="w-2/3 flex items-center justify-between ml-5">
-        //         <div className="text-lg font-bold self-start  mb-1">
-        //             {title}
-        //         </div>
-        //     </div>
-        //     <input
-        //         className="w-2/3 p-3 rounded-md"
-        //         type="text"
-        //         placeholder={body}
-        //         value={inputs.username}
-        //         onChange={onChangeHandler}
-        //     />
-        // </div>
     );
 };

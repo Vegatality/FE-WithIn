@@ -12,7 +12,11 @@ const useInput = (initialValue) => {
         setTarget(initialValue);
     };
 
-    return [target, onChangeHandler, onClearHandler];
+    const adminCancel = () => {
+        setTarget((pre) => ({ ...pre, adminKey: "" }));
+    };
+
+    return [target, onChangeHandler, onClearHandler, adminCancel];
 };
 
 export { useInput };
