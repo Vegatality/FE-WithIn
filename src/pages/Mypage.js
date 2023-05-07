@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaCamera } from "react-icons/fa";
+import { FaCamera, FaUser } from "react-icons/fa";
 
 export const Mypage = () => {
   const [editMode, setEditMode] = useState(false);
@@ -30,7 +30,13 @@ export const Mypage = () => {
         <div className="flex justify-center mt-8">
           {/* Profile picture */}
           <div className="relative w-32 h-32 rounded-full overflow-hidden">
-            <img className="w-full h-full object-cover" src={image} alt="Profile" />
+            {image ? (
+              <img className="w-full h-full object-cover" src={image} alt="Profile" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                <FaUser className="text-gray-400 text-2xl" />
+              </div>
+            )}
             <div className="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
               <label htmlFor="image" className="cursor-pointer">
                 <FaCamera className="text-white text-2xl" />

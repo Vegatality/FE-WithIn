@@ -42,7 +42,7 @@ export const BoardAddComment = () => {
           modules={{ toolbar }}
           placeholder="Add a comment..."
         />
-        <button type="submit" className="bg-mainPurple text-white font-bold py-3 px-2 mr-4 rounded shadow-md">
+        <button type="submit" className="bg-mainPurple text-white font-bold py-6 px-2 mr-4 rounded shadow-md">
           Save
         </button>
       </form>
