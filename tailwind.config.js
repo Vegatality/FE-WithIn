@@ -9,13 +9,13 @@ const colors = {
 };
 
 module.exports = {
-
     content: ["./src/**/*.{js,jsx,ts,tsx}"],
     theme: {
         backgroundColor: {
             mainPurple: colors.mainPurple,
             backgroundPurple: colors.palePurple,
             buttonPurple: colors.mainPurple,
+            white: "#fff",
         },
         textColor: {
             textPurple: colors.textPurple,
@@ -31,7 +31,7 @@ module.exports = {
             // default: colors.mainPurple,
         },
         extend: {},
-  },
+    },
 
-  plugins: [],
+    plugins: [],
 };

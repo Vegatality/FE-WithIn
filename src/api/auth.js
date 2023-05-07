@@ -8,27 +8,30 @@ import Cookies from "js-cookie";
 
 /* 토큰확인 */
 // 매 페이지마다 확인
-const checkAuth = async () => {
-    const authToken = Cookies.get("access");
-    // Cookies.remove("쿠키이름")
-    const config = {
-        headers: {
-            // authorization: `Bearer ${authToken}`,
-        },
-    };
+// const checkAuth = async () => {
+//     // Cookies.remove("쿠키이름")
+//     const authToken = Cookies.get("access");
 
-    const response = await axios.get(
-        `${process.env.REACT_APP_TEST_SERVER_URL}/within/user`,
-        config
-    );
-    return response;
-};
+//     console.log(authToken);
+
+//     const config = {
+//         headers: {
+//             authorization: `Bearer ${authToken}`,
+//         },
+//     };
+
+//     const response = await axios.get(
+//         `${process.env.REACT_APP_TEST_SERVER_URL}/user`,
+//         config
+//     );
+//     return response;
+// };
 
 /* 회원가입 */
 // axios 옵션 객체로 넣기
 const signUpDb = async (inputs) => {
     await axios.post(
-        `${process.env.REACT_APP_TEST_SERVER_URL}/within/signup`,
+        `${process.env.REACT_APP_TEST_SERVER_URL}/signup`,
         inputs
         // {
         //     headers: {
@@ -41,7 +44,7 @@ const signUpDb = async (inputs) => {
 /* 로그인 */
 const signInDb = async (inputs) => {
     const response = await axios.post(
-        `${process.env.REACT_APP_TEST_SERVER_URL}/within/login`,
+        `${process.env.REACT_APP_TEST_SERVER_URL}/login`,
         inputs
         // {
         //     headers: {
@@ -52,4 +55,4 @@ const signInDb = async (inputs) => {
     return response;
 };
 
-export { signUpDb, signInDb, checkAuth };
+export { signUpDb, signInDb };
