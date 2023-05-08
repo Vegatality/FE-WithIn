@@ -20,10 +20,6 @@ export const Login = () => {
     };
     // 지금 문제가 다른 페이지에서 로그인 버튼을 눌렀을 때 로그인이 되어있는 상태임에도 불구하고
     // 로그인하라는 페이지로 이동함.
-    console.log(
-        "Login console:",
-        useSelector((store) => store.auth.userName)
-    );
     const userId = useSelector((store) => store.auth.userName);
 
     useEffect(() => {
@@ -56,15 +52,16 @@ export const Login = () => {
 
             // ---------------------------서버에서 가져온 데이터 확인하기---------------------------
             console.log("data : ", data);
-            const { username } = data.data;
-            alert(`로그인 성공! 환영합니다 ${username}님`);
+            const user = data.data.username;
+            alert(`로그인 성공! 환영합니다 ${user}님`);
 
             // ---------------------------토큰 해체 및 쿠키에 저장.---------------------------
             const token = data.headers.authorization.split(" ")[1];
             moveToMyPage();
             // console.log(jwtDecode(token)); // {id: 'gkdgo99', iat: 1683075561, exp: 1683079161}  두 번째는 발급시간, 세 번째는 유효기간
             const decodedToken = jwtDecode(token);
-            const { sub, exp, auth } = decodedToken;
+            console.log(decodedToken);
+            const { sub, exp, auth, username } = decodedToken;
             const expireDate = new Date(exp * 1000); // 날짜단위로 변환해서 넣기.
             Cookies.set("access", token, {
                 expires: expireDate,
@@ -73,7 +70,11 @@ export const Login = () => {
             // ---------------------------Reducer 에서 토큰 관리할 것임. useName도 Page 넘어갈 때마다 useSelector로 받을 수 있게 넘기는 거 ------------------------------------------------------
             // --------------------------- 페이지 넘어갈 때 Reducer에서 토큰 꺼내와서 살아있는지 확인할 거임. ------------------------------------------------------
             dispatch(
-                SET_TOKEN({ authenticated: true, userName: sub, role: auth })
+                SET_TOKEN({
+                    userName: username,
+                    role: auth,
+                    email: sub,
+                })
             );
             // setIsError({ error: false, message: "" });
 

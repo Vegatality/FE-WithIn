@@ -17,7 +17,7 @@ import { useQuery, useQueryClient } from "react-query";
 import { checkAuth } from "../api/auth";
 import { useEffect } from "react";
 import jwtDecode from "jwt-decode";
-import { SET_TOKEN } from "../redux/modules/authSlice";
+import { DELETE_TOKEN, SET_TOKEN } from "../redux/modules/authSlice";
 
 export const Router = () => {
     // 페이지 넘어갈 때마다 쿠키가 살아있는지 리덕스에서 꺼내와서 확인한다.
@@ -54,6 +54,7 @@ export const Router = () => {
             // 토큰 유효시간이 만료되는 경우(이 때 리덕스에서는 authenticated는 true)
         } else if (!checkCookie && checkAuth) {
             navigate("/login");
+            dispatch(DELETE_TOKEN());
             alert("토큰이 만료되었습니다. 다시 로그인 해주세요.");
 
             // 문제점: 그냥 pathname !== "/signup" 에서는 만약 "/login" 에 있었을 때도 토큰을 확인해서 decode해버리는 문제가 발생
@@ -63,12 +64,12 @@ export const Router = () => {
             // 그래서 여기서 한 번 더 쿠키를 decode해서 GlobalState로 만들어주는 것.
             const decodedToken = jwtDecode(checkCookie);
             console.log("Router", decodedToken);
-            const { sub, auth } = decodedToken;
-            dispatch(SET_TOKEN({ userName: sub, role: auth }));
+            const { sub, auth, username } = decodedToken;
+            dispatch(SET_TOKEN({ userName: username, role: auth, email: sub }));
         }
         // login에서 강제로 Mypage 버튼을 눌러서 이동하려고 하면 navigate를 사용하게 되는데
-        // 이 때 useEffect를 실행하기 위해서 의존성 배열값에 navigate를 넣어주는 것.
-        // navigate error 때문에 useEffect 안에 전부 적어준거고 사실상 페이지 이동할 때마다 useEffect 실행해줌.
+        //  이 때 useEffect를 실행하기 위해서 의존성 배열값에 navigate를 넣어주는 것.
+        //  navigate error 때문에 useEffect 안에 전부 적어준거고 사실상 페이지 이동할 때마다 useEffect 실행해줌.
     }, [navigate]);
 
     return (
