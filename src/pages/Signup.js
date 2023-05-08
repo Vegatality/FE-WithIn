@@ -1,16 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
 import { signUpDb } from "../api/auth";
 import { useInput } from "../hooks/useInput";
 import { AuthenticationInputCard } from "../components/assets/InputField";
 import { HiLogin } from "react-icons/hi";
+import { useSelector } from "react-redux";
 
 export const Signup = () => {
     const navigate = useNavigate();
     const movetoLogin = () => {
         navigate("/login");
     };
+
+    // 지금 문제가 다른 페이지에서 로그인 버튼을 눌렀을 때 로그인이 되어있는 상태임에도 불구하고
+    // 로그인하라는 페이지로 이동함.
+    console.log(
+        "SignUp console:",
+        useSelector((store) => store.auth.userName)
+    );
+
+    const userId = useSelector((store) => store.auth.userName);
+
+    useEffect(() => {
+        if (userId) {
+            navigate(-1);
+        }
+    });
+
     const [isAdmin, setIsAdmin] = useState(false);
 
     // ## 정보 작성 ##
