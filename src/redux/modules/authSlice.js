@@ -4,7 +4,8 @@ const authSlice = createSlice({
     name: "authToken",
     initialState: {
         authenticated: false,
-        userId: null,
+        userName: null,
+        role: "USER",
         // accessToken: null,
         // expireTime: null,
     },
@@ -12,16 +13,19 @@ const authSlice = createSlice({
     reducers: {
         SET_TOKEN: (state, action) => {
             // action: {
-            //     payload: { authenticated: true, userId: id }
+            //     payload: { authenticated: true, userName: id, role: --- }
             // }
             state.authenticated = true;
-            state.userId = action.payload.userId;
+            state.userName = action.payload.userName;
+            state.role = action.payload.role;
             // state.accessToken = action.payload;
             // state.expireTime = new Date().getTime()
         },
         DELETE_TOKEN: (state) => {
             state.authenticated = false;
-            state.userId = "";
+            state.userName = "";
+            state.role = "USER";
+
             // state.accessToken = null;
             // state.expireTime = null;
         },

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useInput } from "../hooks/useInput";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useMutation } from "react-query";
 import { signInDb } from "../api/auth";
 import jwtDecode from "jwt-decode";
@@ -11,12 +11,26 @@ import { SET_TOKEN } from "../redux/modules/authSlice";
 
 export const Login = () => {
     const navigate = useNavigate();
+
     const moveToSignup = () => {
         navigate("/signup");
     };
     const moveToMyPage = () => {
         navigate("/mypage");
     };
+    // 지금 문제가 다른 페이지에서 로그인 버튼을 눌렀을 때 로그인이 되어있는 상태임에도 불구하고
+    // 로그인하라는 페이지로 이동함.
+    console.log(
+        "Login console:",
+        useSelector((store) => store.auth.userName)
+    );
+    const userId = useSelector((store) => store.auth.userName);
+
+    useEffect(() => {
+        if (userId) {
+            navigate(-1);
+        }
+    });
 
     const [inputs, setInputChange, onClearInput] = useInput({
         email: "",
@@ -50,7 +64,7 @@ export const Login = () => {
             moveToMyPage();
             // console.log(jwtDecode(token)); // {id: 'gkdgo99', iat: 1683075561, exp: 1683079161}  두 번째는 발급시간, 세 번째는 유효기간
             const decodedToken = jwtDecode(token);
-            const { id, exp } = decodedToken;
+            const { sub, exp, auth } = decodedToken;
             const expireDate = new Date(exp * 1000); // 날짜단위로 변환해서 넣기.
             Cookies.set("access", token, {
                 expires: expireDate,
@@ -58,7 +72,9 @@ export const Login = () => {
 
             // ---------------------------Reducer 에서 토큰 관리할 것임. useName도 Page 넘어갈 때마다 useSelector로 받을 수 있게 넘기는 거 ------------------------------------------------------
             // --------------------------- 페이지 넘어갈 때 Reducer에서 토큰 꺼내와서 살아있는지 확인할 거임. ------------------------------------------------------
-            dispatch(SET_TOKEN({ authenticated: true, username: id }));
+            dispatch(
+                SET_TOKEN({ authenticated: true, userName: sub, role: auth })
+            );
             // setIsError({ error: false, message: "" });
 
             // 페이지 이동
