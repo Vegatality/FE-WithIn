@@ -61,6 +61,11 @@ function Header() {
                 setHeaderUserName({ role: "관리자", name: userName });
             }
         }
+
+        /* 아무 창에서 logout 했을 때 로그아웃 selector 남아있는 현상 해결 */
+        if (!userName) {
+            setMemberOption(false);
+        }
         /* 그냥 빈 배열을 주면 header는 맨 처음에 마운팅 된 이후로는 재렌더링 때 값을 useEffect문을 실행시키지 않으므로
         로그인 페이지(Header 마운팅)에서 로그인하고 cookie 값이 들어올 때 바뀌도록 의존성 배열값에 getCookie를 넣어준다. header 우상단 내용 바꿔줌. */
     }, [userName]);
@@ -111,8 +116,10 @@ function Header() {
                         </div>
                     </div>
                 ) : (
-                    <div className="cursor-pointer" onClick={moveToLogin}>
-                        Login
+                    <div className="flex row gap-2.5">
+                        <div className="cursor-pointer" onClick={moveToLogin}>
+                            Login
+                        </div>
                     </div>
                 )}
             </div>
