@@ -19,9 +19,10 @@ module.exports = {
     },
     textColor: {
       textPurple: colors.textPurple,
+      darkPurple: colors.mainPurple,
       white: "#fff",
       questionTextGray: colors.infoTextGray,
-      commomTextColor: colors.commonDarkText,
+      commonTextColor: colors.commonDarkText,
     },
     borderColor: {
       mainPurple: colors.mainPurple,

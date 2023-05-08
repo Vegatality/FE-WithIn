@@ -1,22 +1,25 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { deleteComment, editComment } from "../../redux/modules/commentsSlice";
+import { FaEdit, FaSave, FaTrashAlt } from "react-icons/fa";
+import { AiFillHeart } from "react-icons/ai";
+import { motion } from "framer-motion";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 import DOMPurify from "dompurify";
-import { FaEdit, FaSave, FaTrashAlt } from "react-icons/fa";
-import { useDispatch } from "react-redux";
-import { deleteComment, editComment } from "../../redux/modules/commentsSlice";
-import { motion } from "framer-motion";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
 
 export const BoardCommentCard = ({ comment }) => {
+  // { username: "New User", text: "hello", id: 4 }
+  const [commentState, setCommentState] = useState({ ...comment });
   const [editingComment, setEditingComment] = useState(false);
   const [liked, setLiked] = useState(false);
 
-  // { username: "New User", text: "hello", id: 4 }
-  const [commentState, setCommentState] = useState({ ...comment });
-
   const dispatch = useDispatch();
+  const toolbar = {
+    container: [["bold", "italic", "underline"]],
+    handlers: {},
+  };
+
   const handleEditComment = (newText) => {
     console.log("newtext", newText);
     console.log("commentState", commentState);
@@ -25,6 +28,7 @@ export const BoardCommentCard = ({ comment }) => {
     }
     dispatch(editComment({ ...commentState }));
     setEditingComment(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleInputChange = (newText) => {
@@ -34,16 +38,12 @@ export const BoardCommentCard = ({ comment }) => {
 
   const handleDeleteComment = (id) => {
     dispatch(deleteComment(id));
-  };
-
-  const toolbar = {
-    container: [["bold", "italic", "underline"]],
-    handlers: {},
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <motion.div>
-      <div className="flex mx-3 mt-3 animate__animated animate__bounceIn">
+    <motion.div initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -10, opacity: 0 }} transition={{ duration: 0.2 }}>
+      <div className="flex mx-3 mt-3">
         <div className="rounded-full bg-mainPurple w-12 h-12 mr-2 shadow-lg"></div>
 
         <div className="w-full">
@@ -56,9 +56,14 @@ export const BoardCommentCard = ({ comment }) => {
                 transition={{ duration: 0.2, ease: "easeInOut" }}
                 onClick={() => setLiked(!liked)}
               >
-                <FontAwesomeIcon icon={faHeart} color={liked ? "red" : "white"} size="sm" />
+                <AiFillHeart
+                  className="text-md"
+                  color={liked ? "red" : "white"}
+                  onClick={() => setLiked(!liked)}
+                  style={{ filter: "drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.1))" }}
+                />
               </motion.div>
-              <p className="text-xs ml-3 text-gray-500">{comment.date}</p>
+              <p className="text-xs ml-3">{comment.date}</p>
             </div>
             {editingComment ? (
               <div className="flex items-center">
