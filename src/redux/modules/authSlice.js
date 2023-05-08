@@ -4,8 +4,9 @@ const authSlice = createSlice({
     name: "authToken",
     initialState: {
         authenticated: false,
-        userName: null,
+        userName: "",
         role: "USER",
+        email: null,
         // accessToken: null,
         // expireTime: null,
     },
@@ -18,6 +19,7 @@ const authSlice = createSlice({
             state.authenticated = true;
             state.userName = action.payload.userName;
             state.role = action.payload.role;
+            state.email = action.payload.email;
             // state.accessToken = action.payload;
             // state.expireTime = new Date().getTime()
         },
@@ -25,7 +27,7 @@ const authSlice = createSlice({
             state.authenticated = false;
             state.userName = "";
             state.role = "USER";
-
+            state.email = "";
             // state.accessToken = null;
             // state.expireTime = null;
         },
