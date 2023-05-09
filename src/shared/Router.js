@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { Layout } from "./Layout";
 import { Signup } from "../pages/Signup";
 import { Login } from "../pages/Login";
@@ -28,12 +28,6 @@ export const Router = () => {
 
   // useEffect는 렌더링/마운트이(가) 다 끝난 시점에 실행됨.
   useEffect(() => {
-    // 토큰 유효시간이 만료되는 경우
-    // if (!checkCookie && checkAuth) {
-    //     navigate("/login");
-    //     alert("토큰이 만료되었습니다. 다시 로그인 해주세요.");
-    // }
-
     // 로그인 안하고(토큰도 없고 리덕스에서도 authenticated가 false인 상태) 아무 페이지로 진입하는 경우
     // 문제점: 회원가입에서 그냥 뒤로가기 눌러서 로그인으로 이동하려고 할 때 alert동작하는 문제.
     // 해결방법 : 조건문에 !== "/login" 도 추가해줬다
@@ -59,7 +53,7 @@ export const Router = () => {
     // login에서 강제로 Mypage 버튼을 눌러서 이동하려고 하면 navigate를 사용하게 되는데
     //  이 때 useEffect를 실행하기 위해서 의존성 배열값에 navigate를 넣어주는 것.
     //  navigate error 때문에 useEffect 안에 전부 적어준거고 사실상 페이지 이동할 때마다 useEffect 실행해줌.
-  }, [navigate]);
+  }, [navigate, checkCookie]);
 
   return (
     <Layout>
