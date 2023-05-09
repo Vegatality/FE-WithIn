@@ -47,33 +47,32 @@ export const Login = () => {
             // console.log("useMutation의 onMutate, 서버에 요청 시작합니다!");
         },
         onSuccess: (data) => {
-            // ---------------------------입력 초기화---------------------------
+            /* 입력 초기화 */
             onClearInput();
-
-            // ---------------------------서버에서 가져온 데이터 확인하기---------------------------
-            // console.log("data : ", data);
             const name = data.data.username;
             alert(`로그인 성공! 환영합니다 ${name}님`);
 
-            // ---------------------------토큰 해체 및 쿠키에 저장.---------------------------
+            /* 토큰 해체 및 쿠키에 저장. */
             const token = data.headers.authorization.split(" ")[1];
             moveToMainPage();
-            // console.log(jwtDecode(token)); // {id: 'gkdgo99', iat: 1683075561, exp: 1683079161}  두 번째는 발급시간, 세 번째는 유효기간
+
+            /*  console.log(jwtDecode(token)); => {sub: 'as@gmail.com', auth: 'ADMIN' or 'USER', username: 'as', exp: 1683630156, iat: 1683626556} */
             const decodedToken = jwtDecode(token);
-            console.log(decodedToken);
-            const { sub, exp, auth, username } = decodedToken;
+            console.log("디코드 정보:", decodedToken);
+            const { sub, exp, auth, username, userId } = decodedToken;
             const expireDate = new Date(exp * 1000); // 날짜단위로 변환해서 넣기.
             Cookies.set("access", token, {
                 expires: expireDate,
             });
 
-            // ---------------------------Reducer 에서 토큰 관리할 것임. useName도 Page 넘어갈 때마다 useSelector로 받을 수 있게 넘기는 거 ------------------------------------------------------
-            // --------------------------- 페이지 넘어갈 때 Reducer에서 토큰 꺼내와서 살아있는지 확인할 거임. ------------------------------------------------------
+            /*  Reducer 에서 토큰 관리할 것임. useName도 Page 넘어갈 때마다 useSelector로 받을 수 있게 넘기는 거
+            페이지 넘어갈 때 Reducer에서 토큰 꺼내와서 살아있는지 확인할 거임. */
             dispatch(
                 SET_TOKEN({
                     userName: username,
                     role: auth,
                     email: sub,
+                    userId,
                 })
             );
             // setIsError({ error: false, message: "" });
