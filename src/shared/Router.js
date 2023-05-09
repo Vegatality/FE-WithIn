@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { Layout } from "./Layout";
 import { Signup } from "../pages/Signup";
 import { Login } from "../pages/Login";
@@ -14,26 +14,20 @@ import jwtDecode from "jwt-decode";
 import { DELETE_TOKEN, SET_TOKEN } from "../redux/modules/authSlice";
 
 export const Router = () => {
-  // 페이지 넘어갈 때마다 쿠키가 살아있는지 리덕스에서 꺼내와서 확인한다.
-  // 꺼내왔을 때 없으면 그제서야 이제 서버에 쿠키 요청을 하는거다. (그게 서버와 통신 횟수를 줄여서 훨씬 효율적임!)
-  // 서버에 요청하는 건 리액트 쿼리로 할 예정.
+    // 페이지 넘어갈 때마다 쿠키가 살아있는지 리덕스에서 꺼내와서 확인한다.
+    // 꺼내왔을 때 없으면 그제서야 이제 서버에 쿠키 요청을 하는거다. (그게 서버와 통신 횟수를 줄여서 훨씬 효율적임!)
+    // 서버에 요청하는 건 리액트 쿼리로 할 예정.
 
-  // navigate 는 렌더링/마운팅이 다 끝나는 시점에 실행되기 때문에 useEffect 안에 넣어줘야 한다.(검색해보기)
+    // navigate 는 렌더링/마운팅이 다 끝나는 시점에 실행되기 때문에 useEffect 안에 넣어줘야 한다.(검색해보기)
 
-  const checkAuth = useSelector((store) => store.auth.authenticated);
-  const navigate = useNavigate();
-  const { pathname } = useLocation();
-  const dispatch = useDispatch();
-  const checkCookie = Cookies.get("access");
+    const checkAuth = useSelector((store) => store.auth.authenticated);
+    const navigate = useNavigate();
+    const { pathname } = useLocation();
+    const dispatch = useDispatch();
+    const checkCookie = Cookies.get("access");
 
-  // useEffect는 렌더링/마운트이(가) 다 끝난 시점에 실행됨.
-  // useEffect(() => {
-  //   // 토큰 유효시간이 만료되는 경우
-  //   // if (!checkCookie && checkAuth) {
-  //   //     navigate("/login");
-  //   //     alert("토큰이 만료되었습니다. 다시 로그인 해주세요.");
-  //   // } 
-
+    // useEffect는 렌더링/마운트이(가) 다 끝난 시점에 실행됨.
+    useEffect(() => {
         // 로그인 안하고(토큰도 없고 리덕스에서도 authenticated가 false인 상태) 아무 페이지로 진입하는 경우
         // 문제점: 회원가입에서 그냥 뒤로가기 눌러서 로그인으로 이동하려고 할 때 alert동작하는 문제.
         // 해결방법 : 조건문에 !== "/login" 도 추가해줬다
@@ -66,16 +60,15 @@ export const Router = () => {
         //  navigate error 때문에 useEffect 안에 전부 적어준거고 사실상 페이지 이동할 때마다 useEffect 실행해줌.
     }, [navigate]);
 
-
-  return (
-    <Layout>
-      <Routes>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/mypage" element={<Mypage />} />
-        <Route path="/within/boards/:id" element={<BoardDetails />} />
-      </Routes>
-    </Layout>
-  );
+    return (
+        <Layout>
+            <Routes>
+                <Route path="/" element={<MainPage />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/mypage" element={<Mypage />} />
+                <Route path="/within/boards/:id" element={<BoardDetails />} />
+            </Routes>
+        </Layout>
+    );
 };
