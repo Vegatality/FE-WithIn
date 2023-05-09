@@ -23,6 +23,10 @@ function Header() {
     };
 
     const moveToHome = () => {
+        navigate("/");
+    };
+
+    const moveToMyPage = () => {
         navigate("/mypage");
     };
 
@@ -72,7 +76,7 @@ function Header() {
 
     return (
         <div className="flex justify-center relative    mx-auto max-w-7xl w-screen    bg-mainPurple  rounded-b-lg shadow-md">
-            <div className="flex flex-row justify-between items-center relative w-full mx-5 h-20  pr-2    font-extrabold parent text-white  z-10">
+            <div className="flex flex-row justify-between items-center relative w-full mx-5 h-16  pr-2    font-extrabold parent text-white  z-10">
                 <img
                     src="/images/white.png"
                     className="h-12 cursor-pointer"
@@ -82,37 +86,15 @@ function Header() {
                 <div className="text-xl absolute  left-1/2 -translate-x-2/4">
                     {getHeaderPageName()}
                 </div>
-
-                {/* {checkDev ? (
-                    <div className="flex row gap-2.5">
-                        <span>{headerUserName.role}</span>
-                        <span
-                            className="cursor-pointer"
-                            onClick={() => setMemberOption(!memberOption)}
-                        >
-                            {headerUserName.name}
-                        </span>
-                        <div className="bg-backgroundPurple rounded-full">
-                            <CgProfile className="text-2xl text-textPurple" />
-                        </div>
-                    </div>
-                ) : (
-                    <div className="cursor-pointer" onClick={moveToLogin}>
-                        Login/Signup
-                    </div>
-                )} */}
-
                 {userName ? (
                     <div className="flex row gap-2.5">
-                        <span>{headerUserName.role}</span>
-                        <span
-                            className="cursor-pointer"
-                            onClick={() => setMemberOption(!memberOption)}
-                        >
-                            {headerUserName.name}
-                        </span>
+                        <span className="text-sm">{headerUserName.role}</span>
+                        <span className="text-sm">{headerUserName.name}</span>
                         <div className="bg-backgroundPurple rounded-full">
-                            <CgProfile className="text-2xl text-textPurple" />
+                            <CgProfile
+                                className="text-2xl text-textPurple cursor-pointer"
+                                onClick={() => setMemberOption(!memberOption)}
+                            />
                         </div>
                     </div>
                 ) : (
@@ -126,13 +108,19 @@ function Header() {
             <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-black to-transparent opacity-25 rounded-b-lg"></div>
             {memberOption && (
                 <div className="flex flex-col  absolute top-16 right-5 w-36 h-20  bg-white rounded-md overflow-hidde">
-                    <div className="flex flex-row justify-start items-center h-1/2 pl-4 gap-3 rounded-md text-textPurple  hover:bg-mainPurple hover:text-white cursor-pointer">
+                    <div
+                        className="flex flex-row justify-start items-center h-1/2 pl-4 gap-3 rounded-md text-textPurple  hover:bg-mainPurple hover:text-white cursor-pointer"
+                        onClick={logOutHandler}
+                    >
                         <AiOutlineLogout className="text-2xl" />
-                        <div onClick={logOutHandler}>Logout</div>
+                        <div>Logout</div>
                     </div>
-                    <div className="flex flex-row justify-start items-center h-1/2 pl-4 gap-3 rounded-md text-textPurple  hover:bg-mainPurple hover:text-white cursor-pointer">
-                        <ImProfile className="text-2xl" />
-                        <div onClick={moveToHome}>Mypage</div>
+                    <div
+                        className="flex flex-row justify-start items-center h-1/2 pl-4 gap-3 rounded-md text-textPurple  hover:bg-mainPurple hover:text-white cursor-pointer"
+                        onClick={moveToMyPage}
+                    >
+                        <ImProfile className="text-xl" />
+                        <div>Mypage</div>
                     </div>
                 </div>
             )}
