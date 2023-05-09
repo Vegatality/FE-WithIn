@@ -107,7 +107,7 @@ function Header() {
             </div>
             <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-black to-transparent opacity-25 rounded-b-lg"></div>
             {memberOption && (
-                <div className="flex flex-col  absolute top-16 right-5 w-36 h-20  bg-white rounded-md overflow-hidde">
+                <div className="flex flex-col  absolute top-12 right-5 w-36 h-20  bg-white rounded-md overflow-hidde">
                     <div
                         className="flex flex-row justify-start items-center h-1/2 pl-4 gap-3 rounded-md text-textPurple  hover:bg-mainPurple hover:text-white cursor-pointer"
                         onClick={logOutHandler}

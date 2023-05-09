@@ -1,18 +1,9 @@
 import React from "react";
 
-export const EventSectionCard = () => {
+export const EventSectionCard = ({ children }) => {
     return (
-        <div className="flex flex-row justify-between gap-16">
-            <div className="flex flex-col w-full bg-colorForAreaTest">
-                <div>card</div>
-                <div>card</div>
-                <div>card</div>
-            </div>
-            <div className="flex flex-col w-full bg-colorForAreaTest">
-                <div>card2</div>
-                <div>card2</div>
-                <div>card2</div>
-            </div>
+        <div className="flex flex-row justify-center items-center rounded-md w-11/12 h-24 border border-solid border-mainPurple bg-white">
+            {children}
         </div>
     );
 };

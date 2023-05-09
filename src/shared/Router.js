@@ -58,7 +58,7 @@ export const Router = () => {
         // login에서 강제로 Mypage 버튼을 눌러서 이동하려고 하면 navigate를 사용하게 되는데
         //  이 때 useEffect를 실행하기 위해서 의존성 배열값에 navigate를 넣어주는 것.
         //  navigate error 때문에 useEffect 안에 전부 적어준거고 사실상 페이지 이동할 때마다 useEffect 실행해줌.
-    }, [navigate]);
+    }, [navigate, checkCookie]);
 
     return (
         <Layout>
