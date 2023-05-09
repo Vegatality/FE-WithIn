@@ -7,6 +7,9 @@ import { motion } from "framer-motion";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 import DOMPurify from "dompurify";
+import axios from "../../api/axios";
+import { useParams } from "react-router-dom";
+import { useMutation, useQueryClient } from "react-query";
 
 export const BoardCommentCard = ({ comment }) => {
   // { username: "New User", text: "hello", id: 4 }
@@ -14,18 +17,48 @@ export const BoardCommentCard = ({ comment }) => {
   const [editingComment, setEditingComment] = useState(false);
   const [liked, setLiked] = useState(false);
 
+  const params = useParams();
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const toolbar = {
     container: [["bold", "italic", "underline"]],
     handlers: {},
   };
 
-  const handleEditComment = (newText) => {
-    console.log("newtext", newText);
-    console.log("commentState", commentState);
-    if (newText.trim() === "") {
+  const convertHtmlToText = (html) => {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    return div.textContent || div.innerText || "";
+  };
+
+  const putEditedComment = async (newText) => {
+    try {
+      const response = await axios.put(
+        `/boards/${params.id}/comments/${comment.commentId}`,
+        { comment: newText },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      console.log(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const editCommentMutation = useMutation(putEditedComment, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(`${params.id}`);
+    },
+  });
+
+  const handleEditComment = async (newText) => {
+    const text = convertHtmlToText(newText);
+    console.log(text);
+    if (text.trim() === "") {
       return;
     }
+
+    editCommentMutation.mutate(newText);
     dispatch(editComment({ ...commentState }));
     setEditingComment(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -36,10 +69,26 @@ export const BoardCommentCard = ({ comment }) => {
     setCommentState({ ...commentState, text: newText });
   };
 
-  const handleDeleteComment = (id) => {
-    dispatch(deleteComment(id));
+  const requestDeleteComment = async (id) => {
+    try {
+      const response = await axios.delete(`/boards/${params.id}/comments/${id}`);
+      console.log(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleDeleteComment = () => {
+    deleteCommentMutation.mutate(comment.commentId);
+    // dispatch(deleteComment(params.id));
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+  const deleteCommentMutation = useMutation(requestDeleteComment, {
+    onSuccess: () => {
+      console.log("success", params.id);
+      queryClient.invalidateQueries(`${params.id}`);
+    },
+  });
 
   return (
     <motion.div initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -10, opacity: 0 }} transition={{ duration: 0.2 }}>
@@ -50,20 +99,6 @@ export const BoardCommentCard = ({ comment }) => {
           <div className="flex items-center justify-between mb-3 mr-7">
             <div className="flex items-center">
               <h3 className="font-bold text-sm">{comment.username}</h3>
-              <motion.div
-                className="ml-3"
-                animate={liked ? { scale: [1, 1.1, 1] } : {}}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-                onClick={() => setLiked(!liked)}
-              >
-                <AiFillHeart
-                  className="text-md"
-                  color={liked ? "red" : "white"}
-                  onClick={() => setLiked(!liked)}
-                  style={{ filter: "drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.1))" }}
-                />
-              </motion.div>
-              <p className="text-xs ml-3">{comment.date}</p>
             </div>
             {editingComment ? (
               <div className="flex items-center">
@@ -80,16 +115,34 @@ export const BoardCommentCard = ({ comment }) => {
           {editingComment ? (
             <ReactQuill
               className=" bg-white rounded-sm mr-7 shadow-md"
-              defaultValue={commentState.text}
+              defaultValue={commentState.comment}
               onChange={handleInputChange}
               modules={{ toolbar }}
             ></ReactQuill>
           ) : (
             <p
               className="px-3 py-3 bg-white rounded text-sm mr-7 shadow-md"
-              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comment.text) }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comment.comment) }}
             ></p>
           )}
+          <div className="flex pl-3">
+            <div className="flex">
+              <motion.div
+                className="mt-3"
+                animate={liked ? { scale: [1, 1.1, 1] } : {}}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
+                onClick={() => setLiked(!liked)}
+              >
+                <AiFillHeart
+                  className="text-md"
+                  color={liked ? "red" : "white"}
+                  onClick={() => setLiked(!liked)}
+                  style={{ filter: "drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.1))" }}
+                />
+              </motion.div>
+              <p className="text-xs ml-3">{comment.date}</p>
+            </div>
+          </div>
         </div>
       </div>
     </motion.div>

@@ -67,7 +67,7 @@ function Header() {
 
   return (
     <div className="flex justify-center relative    mx-auto max-w-7xl w-screen    bg-mainPurple  rounded-b-lg shadow-md">
-      <div className="flex flex-row justify-between items-center relative w-full mx-5 h-20  pr-2    font-extrabold parent text-white  z-10">
+      <div className="flex flex-row justify-between items-center relative w-full mx-5 h-16  pr-2    font-extrabold parent text-white  z-10">
         <img src="/images/white.png" className="h-12 cursor-pointer" alt="photoThumb" onClick={moveToHome} />
         <div className="text-xl absolute  left-1/2 -translate-x-2/4">{getHeaderPageName()}</div>
 
@@ -92,8 +92,8 @@ function Header() {
 
         {userName ? (
           <div className="flex row gap-2.5">
-            <span>{headerUserName.role}</span>
-            <span className="cursor-pointer" onClick={() => setMemberOption(!memberOption)}>
+            <span className="text-sm">{headerUserName.role}</span>
+            <span className="cursor-pointer text-sm" onClick={() => setMemberOption(!memberOption)}>
               {headerUserName.name}
             </span>
             <div className="bg-backgroundPurple rounded-full">
@@ -114,7 +114,7 @@ function Header() {
             <div onClick={logOutHandler}>Logout</div>
           </div>
           <div className="flex flex-row justify-start items-center h-1/2 pl-4 gap-3 rounded-md text-textPurple  hover:bg-mainPurple hover:text-white cursor-pointer">
-            <ImProfile className="text-2xl" />
+            <ImProfile className="text-xl" />
             <div onClick={moveToHome}>Mypage</div>
           </div>
         </div>

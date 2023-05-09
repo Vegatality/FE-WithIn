@@ -1,11 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MyProfilePicture } from "../components/Mypage/MyProfilePicture";
+import axios from "../api/axios";
+import { useQuery } from "react-query";
 
 export const Mypage = () => {
   const [editMode, setEditMode] = useState(false);
-  const [name, setName] = useState("Some One");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("someone@example.com");
   const [prevName, setPrevName] = useState("");
+  const [image, setImage] = useState("");
+
+  const getOneUserList = async () => {
+    const response = await axios.get("/members/1");
+    return response.data;
+  };
+  const { data } = useQuery("mypage", getOneUserList);
 
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -20,20 +29,35 @@ export const Mypage = () => {
     setEditMode(!editMode);
   };
 
+  const editUserInfo = async () => {
+    const formData = new FormData();
+    formData.append("imageFile", image);
+    const response = await axios.put("/members/1", formData);
+    console.log(response.data);
+  };
   const handleSaveClick = () => {
     if (name.trim() !== "") {
       setEditMode(false);
       setName(name);
-      // Call an API or save the data to a database here
+      editUserInfo();
     }
   };
+
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+      setName(data.username);
+      setEmail(data.email);
+      setImage(data.img);
+    }
+  }, [data]);
 
   return (
     <div className="container mx-auto py-8">
       <div className="max-w-md mx-auto pb-1 bg-backgroundPurple rounded-lg shadow">
         <div className="flex justify-center pt-8">
           {/* Profile picture */}
-          <MyProfilePicture />
+          <MyProfilePicture image={image} />
         </div>
         <div className="mt-4 mx-9 p-3 mb-7 rounded-md bg-[#ebe0ff]">
           {/* Username */}

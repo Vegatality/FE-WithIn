@@ -13,12 +13,47 @@ export const Signup = () => {
     navigate("/login");
   };
 
+  /* 입력할 때 유효성 검사 실시해서 바로 밑에 구문을 바꿔주고 싶음. */
+  // function validatePassword(password) {
+  //     // 비밀번호 유효성 검사 정규식
+  //     const regex = /^[^\s]{8,15}$/;
+
+  //     // 비밀번호가 유효한지 검사
+  //     if (regex.test(password)) {
+  //       return true;
+  //     } else {
+  //       return false;
+  //     }
+  //   }
+
+  /*     const password = "MyPassword123";
+    if (validatePassword(password)) {
+    console.log("유효한 비밀번호입니다.");
+    } else {
+    console.log("유효하지 않은 비밀번호입니다.");
+    } */
+
+  // function validateEmail(email) {
+  //     // 이메일 주소 유효성 검사 정규식
+  //     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  //     // 이메일 주소가 유효한지 검사
+  //     if (regex.test(email)) {
+  //       return true;
+  //     } else {
+  //       return false;
+  //     }
+  //   }
+
+  // const email = "example@email.com";
+  // if (validateEmail(email)) {
+  // console.log("유효한 이메일 주소입니다.");
+  // } else {
+  // console.log("유효하지 않은 이메일 주소입니다.");
+  // }
+
   // 지금 문제가 다른 페이지에서 로그인 버튼을 눌렀을 때 로그인이 되어있는 상태임에도 불구하고
   // 로그인하라는 페이지로 이동함.
-  console.log(
-    "SignUp console:",
-    useSelector((store) => store.auth.userName)
-  );
 
   const userId = useSelector((store) => store.auth.userName);
 
@@ -82,54 +117,43 @@ export const Signup = () => {
     };
     console.log(data);
 
-    /* 입력할 때 유효성 검사 실시해서 바로 밑에 구문을 바꿔주고 싶음. */
-    // function validatePassword(password) {
-    //     // 비밀번호 유효성 검사 정규식
-    //     const regex = /^[^\s]{8,15}$/;
-
-    //     // 비밀번호가 유효한지 검사
-    //     if (regex.test(password)) {
-    //       return true;
-    //     } else {
-    //       return false;
-    //     }
-    //   }
-
-    /*     const password = "MyPassword123";
-    if (validatePassword(password)) {
-    console.log("유효한 비밀번호입니다.");
+    if (isAdmin) {
+      if (inputs.username === "" || inputs.email === "" || inputs.password === "" || inputs.adminKey === "") {
+        //developer 확인용 alert
+        console.log("admin mode");
+        alert("공백은 만들 수 없습니다.");
+        return;
+      } else if (inputs.password !== checkPassword.password) {
+        // developer 확인용.
+        alert("비밀번호가 일치하지 않습니다!");
+        return;
+      } else {
+        console.log("admin 데이터 전송");
+        mutation.mutate(data);
+      }
     } else {
-    console.log("유효하지 않은 비밀번호입니다.");
-    } */
-
-    // function validateEmail(email) {
-    //     // 이메일 주소 유효성 검사 정규식
-    //     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    //     // 이메일 주소가 유효한지 검사
-    //     if (regex.test(email)) {
-    //       return true;
-    //     } else {
-    //       return false;
-    //     }
-    //   }
-
-    // const email = "example@email.com";
-    // if (validateEmail(email)) {
-    // console.log("유효한 이메일 주소입니다.");
-    // } else {
-    // console.log("유효하지 않은 이메일 주소입니다.");
-    // }
-
-    // 지금 문제가 다른 페이지에서 로그인 버튼을 눌렀을 때 로그인이 되어있는 상태임에도 불구하고
-    // 로그인하라는 페이지로 이동함.
-    
+      // 취소 눌렀을 때 adminkey 초기화 되게 해놔야 함.
+      if (inputs.username === "" || inputs.email === "" || inputs.password === "") {
+        //developer 확인용 alert
+        console.log("user mode");
+        alert("공백은 만들 수 없습니다.");
+        return;
+      } else if (inputs.password !== checkPassword.password) {
+        // developer 확인용.
+        alert("비밀번호가 일치하지 않습니다!");
+        return;
+      } else {
+        console.log("user 데이터 전송");
+        mutation.mutate(data); // useMutation() onSuccess 로 옮김.
+      }
+    }
+  };
 
   return (
     <div className="flex  justify-center">
-      <div className="rounded-md space-y-6 flex flex-col items-center w-full max-w-xl bg-backgroundPurple py-16 parent text-commonTextColor relative ">
+      <div className="rounded-md space-y-6 flex flex-col items-center w-full max-w-xl bg-backgroundPurple py-16 parent text-commomTextColor relative ">
         <HiLogin onClick={() => movetoLogin()} className="absolute top-5 left-5 text-3xl hover:text-textPurple" />
-        <div className="text-4xl mb-5 font-bold text-commonTextColor">SIGN UP</div>
+        <div className="text-4xl mb-5 font-bold text-commomTextColor">SIGN UP</div>
 
         <AuthenticationInputCard
           value={inputs.username}
