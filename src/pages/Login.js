@@ -50,11 +50,9 @@ export const Login = () => {
             /* 입력 초기화 */
             onClearInput();
             const name = data.data.username;
-            alert(`로그인 성공! 환영합니다 ${name}님`);
 
             /* 토큰 해체 및 쿠키에 저장. */
             const token = data.headers.authorization.split(" ")[1];
-            moveToMainPage();
 
             /*  console.log(jwtDecode(token)); => {sub: 'as@gmail.com', auth: 'ADMIN' or 'USER', username: 'as', exp: 1683630156, iat: 1683626556} */
             const decodedToken = jwtDecode(token);
@@ -75,10 +73,14 @@ export const Login = () => {
                     userId,
                 })
             );
+            alert(`로그인 성공! 환영합니다 ${name}님`);
             // setIsError({ error: false, message: "" });
 
             // 페이지 이동
-            moveToMainPage();
+            setTimeout(() => {
+                moveToMainPage();
+            }, 1000);
+            // moveToMainPage();
         },
         onError: (error) => {
             console.log(error);
