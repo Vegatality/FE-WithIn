@@ -3,19 +3,25 @@ import { useDispatch } from "react-redux";
 import { deleteComment, editComment } from "../../redux/modules/commentsSlice";
 import { FaEdit, FaSave, FaTrashAlt } from "react-icons/fa";
 import { AiFillHeart } from "react-icons/ai";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 import DOMPurify from "dompurify";
 import axios from "../../api/axios";
 import { useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
+import { throttle } from "lodash";
+import { RiEmotionSadFill } from "react-icons/ri";
+import { GiPartyPopper } from "react-icons/gi";
+import { dateConvert } from "../util/dateConvert";
 
 export const BoardCommentCard = ({ comment }) => {
-  // { username: "New User", text: "hello", id: 4 }
+  // console.log(comment);
   const [commentState, setCommentState] = useState({ ...comment });
   const [editingComment, setEditingComment] = useState(false);
   const [liked, setLiked] = useState(false);
+  const [sad, setSad] = useState(false);
+  const [grats, setGrats] = useState(false);
 
   const params = useParams();
   const queryClient = useQueryClient();
@@ -40,9 +46,9 @@ export const BoardCommentCard = ({ comment }) => {
           headers: { "Content-Type": "application/json" },
         }
       );
-      console.log(response.data);
+      // console.log(response.data);
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
   const editCommentMutation = useMutation(putEditedComment, {
@@ -53,7 +59,7 @@ export const BoardCommentCard = ({ comment }) => {
 
   const handleEditComment = async (newText) => {
     const text = convertHtmlToText(newText);
-    console.log(text);
+    // console.log(text);
     if (text.trim() === "") {
       return;
     }
@@ -65,16 +71,16 @@ export const BoardCommentCard = ({ comment }) => {
   };
 
   const handleInputChange = (newText) => {
-    console.log(newText);
+    // console.log(newText);
     setCommentState({ ...commentState, text: newText });
   };
 
   const requestDeleteComment = async (id) => {
     try {
       const response = await axios.delete(`/boards/${params.id}/comments/${id}`);
-      console.log(response.data);
+      // console.log(response.data);
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
@@ -85,20 +91,86 @@ export const BoardCommentCard = ({ comment }) => {
   };
   const deleteCommentMutation = useMutation(requestDeleteComment, {
     onSuccess: () => {
-      console.log("success", params.id);
+      // console.log("success", params.id);
+      queryClient.invalidateQueries(`${params.id}`);
+    },
+  });
+  const postLikeClick = async () => {
+    try {
+      const response = await axios.post(`/boards/${params.id}/comments/${comment.commentId}/LIKE`);
+      // console.log(response.data);
+    } catch (err) {
+      // console.log(err);
+    }
+  };
+  const postSadClick = async () => {
+    try {
+      const response = await axios.post(`/boards/${params.id}/comments/${comment.commentId}/SAD`);
+      // console.log(response.data);
+    } catch (err) {
+      // console.log(err);
+    }
+  };
+  const postGratsClick = async () => {
+    try {
+      const response = await axios.post(`/boards/${params.id}/comments/${comment.commentId}/CONGRATULATION`);
+      // console.log(response.data);
+    } catch (err) {
+      // console.log(err);
+    }
+  };
+  const likeMutation = useMutation(postLikeClick, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(`${params.id}`);
+    },
+  });
+  const sadMutation = useMutation(postSadClick, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(`${params.id}`);
+    },
+  });
+  const gratsMutation = useMutation(postGratsClick, {
+    onSuccess: () => {
       queryClient.invalidateQueries(`${params.id}`);
     },
   });
 
+  const onLikeClick = throttle(
+    () => {
+      setLiked(!liked);
+      likeMutation.mutate();
+    },
+    100,
+    { trailing: false }
+  );
+  const onSadClick = throttle(
+    () => {
+      setSad(!sad);
+      sadMutation.mutate();
+    },
+    100,
+    { trailing: false }
+  );
+  const onGratsClick = throttle(
+    () => {
+      setGrats(!grats);
+      gratsMutation.mutate();
+    },
+    100,
+    { trailing: false }
+  );
+
   return (
     <motion.div initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -10, opacity: 0 }} transition={{ duration: 0.2 }}>
-      <div className="flex mx-3 mt-3">
-        <div className="rounded-full bg-mainPurple w-12 h-12 mr-2 shadow-lg"></div>
-
+      <div className="flex mr-3 mt-3">
+        <div className="px-2">
+          <div className="rounded-full bg-mainPurple w-12 h-12 shadow-lg"></div>
+        </div>
         <div className="w-full">
           <div className="flex items-center justify-between mb-3 mr-7">
             <div className="flex items-center">
               <h3 className="font-bold text-sm">{comment.username}</h3>
+              <p className="ml-3 text-xs antialiased text-darkPurple">{dateConvert(comment.createdAt)}</p>
             </div>
             {editingComment ? (
               <div className="flex items-center">
@@ -114,33 +186,59 @@ export const BoardCommentCard = ({ comment }) => {
           </div>
           {editingComment ? (
             <ReactQuill
-              className=" bg-white rounded-sm mr-7 shadow-md"
+              className=" bg-white rounded-t mr-7 shadow-md"
               defaultValue={commentState.comment}
               onChange={handleInputChange}
               modules={{ toolbar }}
             ></ReactQuill>
           ) : (
             <p
-              className="px-3 py-3 bg-white rounded text-sm mr-7 shadow-md"
+              className="px-3 py-3 bg-white rounded-t text-sm mr-7 shadow"
               dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comment.comment) }}
             ></p>
           )}
-          <div className="flex pl-3">
-            <div className="flex">
-              <motion.div
-                className="mt-3"
-                animate={liked ? { scale: [1, 1.1, 1] } : {}}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-                onClick={() => setLiked(!liked)}
-              >
+          <div className="flex pl-3 bg-[#ebe0ff] rounded-b-md mr-7 shadow">
+            <div className="flex justify-center items-center my-2">
+              <motion.div animate={liked ? { scale: [1, 1.1, 1] } : {}} transition={{ duration: 0.2, ease: "easeInOut" }}>
                 <AiFillHeart
-                  className="text-md"
+                  className="text-lg mr-2"
                   color={liked ? "red" : "white"}
-                  onClick={() => setLiked(!liked)}
+                  onClick={onLikeClick}
                   style={{ filter: "drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.1))" }}
                 />
               </motion.div>
-              <p className="text-xs ml-3">{comment.date}</p>
+
+              <span className="text-xs w-4">
+                {comment && (comment.likeCnt === 0 || comment.likeCnt === null ? "" : <span>{comment.likeCnt}</span>)}
+              </span>
+            </div>
+
+            <div className="flex justify-center items-center my-2">
+              <motion.div animate={sad ? { scale: [1, 1.1, 1] } : {}} transition={{ duration: 0.2, ease: "easeInOut" }}>
+                <RiEmotionSadFill
+                  className="mr-2 text-lg"
+                  color={sad ? "#6d93ff" : "white"}
+                  onClick={onSadClick}
+                  style={{ filter: "drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.1))" }}
+                />
+              </motion.div>
+
+              <span className="text-xs w-4">{comment && (comment.sadCnt === 0 || comment.sadCnt === null ? "" : <span>{comment.sadCnt}</span>)}</span>
+            </div>
+
+            <div className="flex justify-center items-center my-2">
+              <motion.div animate={grats ? { scale: [1, 1.1, 1] } : {}} transition={{ duration: 0.2, ease: "easeInOut" }}>
+                <GiPartyPopper
+                  className="text-lg mr-2"
+                  color={grats ? "#fcaaa1" : "white"}
+                  onClick={onGratsClick}
+                  style={{ filter: "drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.1))" }}
+                />
+              </motion.div>
+
+              <span className="text-xs w-4">
+                {comment && (comment.congratulationCnt === 0 || comment.congratulationCnt === null ? "" : <span>{comment.congratulationCnt}</span>)}
+              </span>
             </div>
           </div>
         </div>

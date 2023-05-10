@@ -8,7 +8,7 @@ const instance = axios.create({
 });
 
 const token = Cookies.get("access");
-console.log(token);
+// console.log(token);
 if (token) {
   instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 }

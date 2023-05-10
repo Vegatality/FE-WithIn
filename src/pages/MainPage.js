@@ -13,8 +13,10 @@ import { useQuery } from "react-query";
 import { getBoardList } from "../api/getBoardList";
 import jwtDecode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { dateConvert } from "../components/util/dateConvert";
 
 export const MainPage = () => {
+  const [ModalComponent, openModal, closeModal] = useModal();
   // const { role } = useSelector((store) => store.auth);
   // console.log(role);
   const token = Cookies.get("access");
@@ -40,6 +42,7 @@ export const MainPage = () => {
     alert(error);
   }
 
+  console.log(dateConvert("2023-05-10T00:36:14.446844"));
   const { auth } = jwtDecode(token);
   console.log("data >>> ", data);
   console.log("data.data.content >>> ", data.data.content);
@@ -72,14 +75,29 @@ export const MainPage = () => {
   /* category는 두 개만 입력가능하게 제한 */
   // 게시글 나누도록 조건문 : event, goodbye
 
+  const postBoard = async (data) => {
+    const stringifiedData = JSON.stringify(data);
+    const response = await axios.post("/boards", stringifiedData);
+    console.log("board data sent", response.data);
+  };
+  const handleSave = (data) => {
+    postBoard(data);
+    // console.log(data);
+    closeModal();
+  };
+
   return (
     <div className="p-4 bg-backgroundPurple ">
+      <ModalComponent onSave={handleSave} />
       <MainProfileList>
         <MainProfileCard />
       </MainProfileList>
       {auth === "ADMIN" ? (
         <div className="flex flex-row justify-end items-center mt-6">
-          <button className="px-5 py-3 mr-5 rounded-md text-white text-lg font-bold bg-buttonPurple hover:bg-[#826b99] transition duration-300 shadow-md cursor-pointer">
+          <button
+            className="px-5 py-3 mr-5 rounded-md text-white text-lg font-bold bg-buttonPurple hover:bg-[#826b99] transition duration-300 shadow-md cursor-pointer"
+            onClick={openModal}
+          >
             모달버튼
           </button>
         </div>

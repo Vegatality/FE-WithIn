@@ -12,6 +12,7 @@ import { checkAuth } from "../api/auth";
 import { useEffect } from "react";
 import jwtDecode from "jwt-decode";
 import { DELETE_TOKEN, SET_TOKEN } from "../redux/modules/authSlice";
+import { ImageTest } from "../pages/ImageTest";
 
 export const Router = () => {
   // 페이지 넘어갈 때마다 쿠키가 살아있는지 리덕스에서 꺼내와서 확인한다.
@@ -46,7 +47,7 @@ export const Router = () => {
       // 만약 새로고침했을 때 쿠키는 있는데 GlobalState는 초기화되는 현상이 생김.
       // 그래서 여기서 한 번 더 쿠키를 decode해서 GlobalState로 만들어주는 것.
       const decodedToken = jwtDecode(checkCookie);
-      console.log("Router", decodedToken);
+      // console.log("Router", decodedToken);
       const { sub, auth, username } = decodedToken;
       dispatch(SET_TOKEN({ userName: username, role: auth, email: sub }));
     }
@@ -60,6 +61,7 @@ export const Router = () => {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/imagetest" element={<ImageTest />} />
         <Route path="/login" element={<Login />} />
         <Route path="/mypage" element={<Mypage />} />
         <Route path="/within/boards/:id" element={<BoardDetails />} />

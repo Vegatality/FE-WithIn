@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { MyProfilePicture } from "../components/Mypage/MyProfilePicture";
 import axios from "../api/axios";
 import { useQuery } from "react-query";
+import Cookies from "js-cookie";
+import jwtDecode from "jwt-decode";
 
 export const Mypage = () => {
   const [editMode, setEditMode] = useState(false);
@@ -10,8 +12,15 @@ export const Mypage = () => {
   const [prevName, setPrevName] = useState("");
   const [image, setImage] = useState("");
 
+  const token = Cookies.get("access");
+  let userId = null;
+  if (token) {
+    const decodedToken = jwtDecode(token);
+    console.log(decodedToken);
+    userId = decodedToken.userId;
+  }
   const getOneUserList = async () => {
-    const response = await axios.get("/members/1");
+    const response = await axios.get(`/members/${userId}`);
     return response.data;
   };
   const { data } = useQuery("mypage", getOneUserList);
@@ -32,7 +41,7 @@ export const Mypage = () => {
   const editUserInfo = async () => {
     const formData = new FormData();
     formData.append("imageFile", image);
-    const response = await axios.put("/members/1", formData);
+    const response = await axios.put(`/members/${userId}`, formData);
     console.log(response.data);
   };
   const handleSaveClick = () => {
@@ -57,15 +66,15 @@ export const Mypage = () => {
       <div className="max-w-md mx-auto pb-1 bg-backgroundPurple rounded-lg shadow">
         <div className="flex justify-center pt-8">
           {/* Profile picture */}
-          <MyProfilePicture image={image} />
+          {data && <MyProfilePicture image={data.img} />}
         </div>
         <div className="mt-4 mx-9 p-3 mb-7 rounded-md bg-[#ebe0ff]">
           {/* Username */}
           <div className="mb-2">
             <div className="flex justify-between">
-              <label className="font-bold text-lg mb-2" htmlFor="name">
+              <lable className="font-bold text-lg mb-2" htmlFor="name">
                 Name
-              </label>
+              </lable>
               <div className="flex">
                 {editMode && (
                   <button className="clickableTextStyle" onClick={handleSaveClick}>
