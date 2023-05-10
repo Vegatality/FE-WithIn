@@ -15,6 +15,9 @@ import jwtDecode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 
 export const MainPage = () => {
+    const [ModalComponent, openModal, closeModal] = useModal();
+    const [memberCard, setMemberCard] = useState(0);
+
     const [list, setList] = useState([
         {
             boardId: 1,
@@ -54,21 +57,19 @@ export const MainPage = () => {
     // const { role } = useSelector((store) => store.auth);
     // console.log(role);
 
-    /* const navigate = useNavigate();
+    const navigate = useNavigate();
     const token = Cookies.get("access");
 
-    const { isLoading, isError, data, error } = useQuery("auth", getBoardList); */
-
-    // const { isLoading, isError, data, error } = useQuery("auth", getBoardList, {
-    //     // enabled: !!token,
-    //     retry: false,
-    //     refetchOnWindowFocus: true,
-    //     staleTime: 600 * 1000,
-    // });
+    const { isLoading, isError, data, error } = useQuery("auth", getBoardList, {
+        // enabled: !!token,
+        retry: false,
+        refetchOnWindowFocus: true,
+        staleTime: 600 * 1000,
+    });
 
     /* 굳이 없어도 Router에서 처리 해주게 의존성 배열에 넣었음. */
 
-    /*  if (isLoading) {
+    if (isLoading) {
         if (!token) {
             alert("토큰이 만료되었습니다. 로그인을 다시 해주세요.");
             navigate("/login");
@@ -83,16 +84,11 @@ export const MainPage = () => {
     }
 
     const { auth } = jwtDecode(token);
-    console.log("data >>> ", data); */
-
-    /*  console.log("data.data.content >>> ", data.data.content);
+    console.log("data >>> ", data);
+    console.log("data.data.content >>> ", data.data.content);
     const { content } = data.data;
-    console.log(content); */
-
-    /* 카테고리가 지금은 없어서 이거 나중에 주석 풀어야 함. */
-    // const eventCards = content.filter((ele) => ele.category === "event");
-    // const eventCards = content.filter((ele) => ele.category === "category");
-    // const goodByeCards = content.filter((ele) => ele.category === "goodbye");
+    const eventCards = content.filter((ele) => ele.category === "event");
+    const goodByeCards = content.filter((ele) => ele.category === "goodbye");
 
     // useEffect(() => {
     //     if (role === "ADMIN") {
@@ -100,61 +96,42 @@ export const MainPage = () => {
     //     }
     // }, [role]);
 
-    /* category는 두 개만 입력가능하게 제한 */
-    // 게시글 나누도록 조건문 : event, goodbye
+    const postBoard = async (data) => {
+        const stringifiedData = JSON.stringify(data);
+        const response = await axios.post("/boards", stringifiedData);
+        console.log("board data sent", response.data);
+    };
+    const handleSave = (data) => {
+        postBoard(data);
+        // console.log(data);
+        closeModal();
+    };
 
     return (
         <div className="p-4 bg-backgroundPurple ">
+            <ModalComponent onSave={handleSave} />
             <MainProfileList>
                 <MainProfileCard />
             </MainProfileList>
-            {/* {auth === "ADMIN" ? (
+            {auth === "ADMIN" ? (
                 <div className="flex flex-row justify-end items-center mt-6">
-                    <button className="px-5 py-3 mr-5 rounded-md text-white text-lg font-bold bg-buttonPurple hover:bg-[#826b99] transition duration-300 shadow-md cursor-pointer">
+                    <button
+                        className="px-5 py-3 mr-5 rounded-md text-white text-lg font-bold bg-buttonPurple hover:bg-[#826b99] transition duration-300 shadow-md cursor-pointer"
+                        onClick={openModal}
+                    >
                         모달버튼
                     </button>
                 </div>
-            ) : null} */}
-            <div className="flex flex-row justify-end items-center mt-6">
-                <button className="px-5 py-3 mr-5 rounded-md text-white text-lg font-bold bg-buttonPurple hover:bg-[#826b99] transition duration-300 shadow-md cursor-pointer">
-                    모달버튼
-                </button>
-            </div>
-            <div className="flex flex-col gap-16 p-2">
-                <EventGridSection name="event">
-                    {list.map((ele) => {
-                        return (
-                            <EventGridCard
-                                key={ele.boardId}
-                                commentLength={ele.commentLength}
-                                createdTime={ele.createdTime}
-                                congratulationCnt={ele.congratulationCnt}
-                                likeCnt={ele.likeCnt}
-                                sadCnt={ele.sadCnt}
-                                title={ele.title}
-                                image={ele.image}
-                            />
-                        );
-                    })}
-                </EventGridSection>
-                <EventGridSection name="goodbye">
-                    {list.map((ele) => {
-                        return (
-                            <EventGridCard
-                                key={ele.boardId}
-                                commentLength={ele.commentLength}
-                                createdTime={ele.createdTime}
-                                congratulationCnt={ele.congratulationCnt}
-                                likeCnt={ele.likeCnt}
-                                sadCnt={ele.sadCnt}
-                                title={ele.title}
-                                image={ele.image}
-                            />
-                        );
-                    })}
-                </EventGridSection>
+            ) : null}
+            <div className="flex flex-row gap-16 p-2">
+                {/* <EventSection name="section1">
+            <EventSectionCard>test</EventSectionCard>
+            <EventSectionCard>test</EventSectionCard>
+            <EventSectionCard>test</EventSectionCard>
+            <EventSectionCard>test</EventSectionCard>
+        </EventSection> */}
 
-                {/* <EventGridSection name="section1">
+                <EventGridSection name="section1">
                     {eventCards &&
                         eventCards.map((ele) => (
                             <EventGridCard
@@ -183,75 +160,128 @@ export const MainPage = () => {
                                 contents={ele.contents}
                             />
                         ))}
-                </EventGridSection> */}
+                </EventGridSection>
             </div>
         </div>
-
-        // <div className="p-4 bg-backgroundPurple ">
-        //     <MainProfileList>
-        //         <MainProfileCard />
-        //     </MainProfileList>
-        //     {/* {auth === "ADMIN" ? (
-        //         <div className="flex flex-row justify-end items-center mt-6">
-        //             <button className="px-5 py-3 mr-5 rounded-md text-white text-lg font-bold bg-buttonPurple hover:bg-[#826b99] transition duration-300 shadow-md cursor-pointer">
-        //                 모달버튼
-        //             </button>
-        //         </div>
-        //     ) : null} */}
-        //     <div className="flex flex-row justify-end items-center mt-6">
-        //         <button className="px-5 py-3 mr-5 rounded-md text-white text-lg font-bold bg-buttonPurple hover:bg-[#826b99] transition duration-300 shadow-md cursor-pointer">
-        //             모달버튼
-        //         </button>
-        //     </div>
-        //     <div className="flex flex-row gap-16 p-2">
-        //         <EventGridSection name="event">
-        //             {list.map((ele) => {
-        //                 return (
-        //                     <EventGridCard
-        //                         key={ele.boardId}
-        //                         commentLength={ele.commentLength}
-        //                         createdTime={ele.createdTime}
-        //                         congratulationCnt={ele.congratulationCnt}
-        //                         likeCnt={ele.likeCnt}
-        //                         sadCnt={ele.sadCnt}
-        //                         title={ele.title}
-        //                         image={ele.image}
-        //                     />
-        //                 );
-        //             })}
-        //         </EventGridSection>
-
-        //         {/* <EventGridSection name="section1">
-        //             {eventCards &&
-        //                 eventCards.map((ele) => (
-        //                     <EventGridCard
-        //                         key={ele.boardId}
-        //                         commentLength={ele.comment.length}
-        //                         createdTime={ele.createdTime}
-        //                         congratulationCnt={ele.congratulationCnt}
-        //                         likeCnt={ele.likeCnt}
-        //                         sadCnt={ele.sadCnt}
-        //                         title={ele.title}
-        //                         contents={ele.contents}
-        //                     />
-        //                 ))}
-        //         </EventGridSection>
-        //         <EventGridSection name="section2">
-        //             {goodByeCards &&
-        //                 goodByeCards.map((ele) => (
-        //                     <EventGridCard
-        //                         key={ele.boardId}
-        //                         commentLength={ele.comment.length}
-        //                         createdTime={ele.createdTime}
-        //                         congratulationCnt={ele.congratulationCnt}
-        //                         likeCnt={ele.likeCnt}
-        //                         sadCnt={ele.sadCnt}
-        //                         title={ele.title}
-        //                         contents={ele.contents}
-        //                     />
-        //                 ))}
-        //         </EventGridSection> */}
-        //     </div>
-        // </div>
     );
 };
+
+// <div className="p-4 bg-backgroundPurple ">
+//     <MainProfileList>
+//         <MainProfileCard />
+//     </MainProfileList>
+//     {/* {auth === "ADMIN" ? (
+//         <div className="flex flex-row justify-end items-center mt-6">
+//             <button className="px-5 py-3 mr-5 rounded-md text-white text-lg font-bold bg-buttonPurple hover:bg-[#826b99] transition duration-300 shadow-md cursor-pointer">
+//                 모달버튼
+//             </button>
+//         </div>
+//     ) : null} */}
+//     <div className="flex flex-row justify-end items-center mt-6">
+//         <button className="px-5 py-3 mr-5 rounded-md text-white text-lg font-bold bg-buttonPurple hover:bg-[#826b99] transition duration-300 shadow-md cursor-pointer">
+//             모달버튼
+//         </button>
+//     </div>
+//     <div className="flex flex-row gap-16 p-2">
+//         <EventGridSection name="event">
+//             {list.map((ele) => {
+//                 return (
+//                     <EventGridCard
+//                         key={ele.boardId}
+//                         commentLength={ele.commentLength}
+//                         createdTime={ele.createdTime}
+//                         congratulationCnt={ele.congratulationCnt}
+//                         likeCnt={ele.likeCnt}
+//                         sadCnt={ele.sadCnt}
+//                         title={ele.title}
+//                         image={ele.image}
+//                     />
+//                 );
+//             })}
+//         </EventGridSection>
+
+//         {/* <EventGridSection name="section1">
+//             {eventCards &&
+//                 eventCards.map((ele) => (
+//                     <EventGridCard
+//                         key={ele.boardId}
+//                         commentLength={ele.comment.length}
+//                         createdTime={ele.createdTime}
+//                         congratulationCnt={ele.congratulationCnt}
+//                         likeCnt={ele.likeCnt}
+//                         sadCnt={ele.sadCnt}
+//                         title={ele.title}
+//                         contents={ele.contents}
+//                     />
+//                 ))}
+//         </EventGridSection>
+//         <EventGridSection name="section2">
+//             {goodByeCards &&
+//                 goodByeCards.map((ele) => (
+//                     <EventGridCard
+//                         key={ele.boardId}
+//                         commentLength={ele.comment.length}
+//                         createdTime={ele.createdTime}
+//                         congratulationCnt={ele.congratulationCnt}
+//                         likeCnt={ele.likeCnt}
+//                         sadCnt={ele.sadCnt}
+//                         title={ele.title}
+//                         contents={ele.contents}
+//                     />
+//                 ))}
+//         </EventGridSection> */}
+//     </div>
+// </div>
+
+// return (
+//     <div className="p-4 bg-backgroundPurple ">
+//         <MainProfileList>
+//             <MainProfileCard />
+//         </MainProfileList>
+//         {/* {auth === "ADMIN" ? (
+//             <div className="flex flex-row justify-end items-center mt-6">
+//                 <button className="px-5 py-3 mr-5 rounded-md text-white text-lg font-bold bg-buttonPurple hover:bg-[#826b99] transition duration-300 shadow-md cursor-pointer">
+//                     모달버튼
+//                 </button>
+//             </div>
+//         ) : null} */}
+//         <div className="flex flex-row justify-end items-center mt-6">
+//             <button className="px-5 py-3 mr-5 rounded-md text-white text-lg font-bold bg-buttonPurple hover:bg-[#826b99] transition duration-300 shadow-md cursor-pointer">
+//                 모달버튼
+//             </button>
+//         </div>
+//         <div className="flex flex-col gap-16 p-2">
+//             <EventGridSection name="event">
+//                 {list.map((ele) => {
+//                     return (
+//                         <EventGridCard
+//                             key={ele.boardId}
+//                             commentLength={ele.commentLength}
+//                             createdTime={ele.createdTime}
+//                             congratulationCnt={ele.congratulationCnt}
+//                             likeCnt={ele.likeCnt}
+//                             sadCnt={ele.sadCnt}
+//                             title={ele.title}
+//                             image={ele.image}
+//                         />
+//                     );
+//                 })}
+//             </EventGridSection>
+//             <EventGridSection name="goodbye">
+//                 {list.map((ele) => {
+//                     return (
+//                         <EventGridCard
+//                             key={ele.boardId}
+//                             commentLength={ele.commentLength}
+//                             createdTime={ele.createdTime}
+//                             congratulationCnt={ele.congratulationCnt}
+//                             likeCnt={ele.likeCnt}
+//                             sadCnt={ele.sadCnt}
+//                             title={ele.title}
+//                             image={ele.image}
+//                         />
+//                     );
+//                 })}
+//             </EventGridSection>
+//         </div>
+//     </div>

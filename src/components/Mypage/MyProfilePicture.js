@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 
 export const MyProfilePicture = ({ image }) => {
   const { userName } = useSelector((store) => store.auth);
-  const [view, setView] = useState("");
+  const [view, setView] = useState(image);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -26,10 +26,11 @@ export const MyProfilePicture = ({ image }) => {
       alert("File size is too large. Please select a file under 3 MB.");
       return;
     }
-
+    console.log(file);
     const formData = new FormData();
     formData.append("imageFile", file);
-    formData.append("userPageRequestDto", { username: "username" });
+    console.log(formData);
+    // formData.append("userPageRequestDto", { username: "username" });
     try {
       const response = axios.put("/members/1", formData, {
         headers: {
@@ -57,7 +58,7 @@ export const MyProfilePicture = ({ image }) => {
         title="Upload Image"
       ></label>
       {image ? (
-        <img className="w-full h-full rounded-full object-cover shadow-md" src={image} alt="" />
+        <img className="w-full h-full rounded-full object-cover shadow-md" src={view} alt="" />
       ) : (
         <div className=" w-52 h-52 rounded-full bg-mainPurple flex items-center justify-center shadow-md">
           <FontAwesomeIcon icon={faUser} size="5x" className=" text-white" />

@@ -90,7 +90,7 @@ export const Signup = () => {
       movetoLogin();
     },
     onError: (error) => {
-      console.log(error);
+      // console.log(error);
       const errorMessage = error.response.data.message;
       alert(errorMessage); // "중복된 email 입니다.
       // statusCode가 전부 400 이니까 statusCode로 분류할 수가 없음...

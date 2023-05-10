@@ -27,9 +27,9 @@ export const BoardAddComment = ({ id }) => {
   const postNewCommentApi = async (newComment) => {
     try {
       const response = await axios.post(`/boards/${id}/comments`, newComment);
-      console.log(response.data);
+      // console.log(response.data);
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
   const addCommentMutation = useMutation(postNewCommentApi, {

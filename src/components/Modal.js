@@ -1,17 +1,25 @@
 import { useState } from "react";
 import useQuill from "../hooks/useQuillEditor";
 import { MyProfilePicture } from "./Mypage/MyProfilePicture";
-
+import Select from "react-select";
 const Modal = ({ isOpen, onClose, onSave }) => {
-  const [name, setName] = useState("");
+  const [eventType, setEventType] = useState("Event");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
   const { value, renderQuill } = useQuill("");
+  const [selected, setSelected] = useState(null);
 
-  const handleNameChange = (event) => {
-    setName(event.target.value);
+  const handleChange = (selectedOption) => {
+    setSelected(selectedOption);
+    // console.log(`Option selected:`, selectedOption);
+    // console.log("selected", selected);
   };
+
+  const handleEventTypeChange = (event) => {
+    setEventType(event.target.value);
+  };
+
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
   };
@@ -25,10 +33,13 @@ const Modal = ({ isOpen, onClose, onSave }) => {
   };
 
   const handleSaveClick = () => {
-    onSave({ title: title, contents: name, image });
+    onSave({ title: title, contents: value, image: "none", category: selected.value });
     console.log("click");
   };
-
+  const options = [
+    { value: "Goodbye", label: "Goodbye" },
+    { value: "Event", label: "Event" },
+  ];
   return (
     <div className={`fixed inset-0 z-50 ${isOpen ? "" : "hidden"}`}>
       <div className="absolute inset-0 bg-mainPurple opacity-75" onClick={() => onClose()}></div>
@@ -38,10 +49,12 @@ const Modal = ({ isOpen, onClose, onSave }) => {
           <div className="flex justify-center">
             <MyProfilePicture />
           </div>
+
           <div className="mb-4">
-            <label htmlFor="name" className="block font-medium mb-2">
+            <label htmlFor="title" className="block font-medium mb-2">
               Title
             </label>
+
             <input
               autoFocus
               className="appearance-none rounded w-full px-3 py-1 outline-none  focus:ring-2 focus: ring-mainPurple"
@@ -49,25 +62,18 @@ const Modal = ({ isOpen, onClose, onSave }) => {
               placeholder="Enter title"
               value={title}
               onChange={handleTitleChange}
-              name="name"
+              name="title"
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="name" className="block font-medium mb-2">
-              Name
+            <label htmlFor="eventType" className="block font-medium mb-2">
+              Type of Event
             </label>
-            <input
-              className="appearance-none rounded w-full px-3 py-1 outline-none  focus:ring-2 focus: ring-mainPurple"
-              type="text"
-              placeholder="Enter your name"
-              value={name}
-              onChange={handleNameChange}
-              name="name"
-            />
+            <Select options={options} onChange={handleChange} autoFocus={true} />
           </div>
           <div className="mb-4">
             <label htmlFor="description" className="block font-medium mb-2">
-              Description
+              Contents
             </label>
             {renderQuill()}
           </div>
