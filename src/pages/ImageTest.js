@@ -21,12 +21,16 @@ export const ImageTest = () => {
   }
 
   async function handleSubmit() {
+    
     const formData = new FormData();
+
     const text = JSON.stringify({ username: "username" });
     const imageBlob = new Blob([image], { type: "image/jpeg" });
     const textBlob = new Blob([text], { type: "application/json" });
+
     formData.append("imageFile", imageBlob, "image.jpg");
     formData.append("userPageRequestDto", textBlob);
+
     const response = await axios.put(`/members/${userId}`, formData, { headers: { "Content-Type": "multipart/form-data" } });
     console.log(response);
   }

@@ -33,14 +33,26 @@
     background-color: #583f72;
     border-radius: 5px;
 }
+
 body {
-    /* background-color: #444064; */
-    background-image: url("./bgImage.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    /* background: linear-gradient(135deg, #ad9cd9, #ffdef7); */
+    background: linear-gradient(135deg, #ffdef7, #bfa6ff, #ffe3e3);
+    background-size: 200% 200%;
+    animation: gradient 15s ease infinite;
+    height: 100vh;
 }
 
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
 /* prevent ChromeAutoComplte  from changing input box inner background  */
 input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 30px white inset !important;

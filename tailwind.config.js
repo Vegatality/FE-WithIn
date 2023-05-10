@@ -7,6 +7,8 @@ const colors = {
     infoTextGray: "#4B5563",
     commonDarkText: "#292611",
     colorForAreaTest: "#FBBF24",
+    secondaryBgColor: "#EBE0FF",
+    sectionPurple: "#e7d4ff",
 };
 
 module.exports = {
@@ -18,6 +20,8 @@ module.exports = {
             buttonPurple: colors.mainPurple,
             white: "#fff",
             colorForAreaTest: colors.colorForAreaTest,
+            secondaryBgColor: colors.secondaryBgColor,
+            sectionPurple: colors.sectionPurple,
         },
         textColor: {
             textPurple: colors.textPurple,

@@ -30,6 +30,46 @@ export const Login = () => {
         navigate("/");
     };
 
+    // const onLoginHandler = async () => {
+    //     if (inputs.id !== "" && inputs.password !== "") {
+    //         const data = await signInDb(inputs);
+    //         console.log(data);
+    //         // moveToMainPage();
+    //         onClearInput();
+
+    //         /* 토큰 해체 및 쿠키에 저장. */
+    //         const token = data.headers.authorization.split(" ")[1];
+
+    //         /*  console.log(jwtDecode(token)); => {sub: 'as@gmail.com', auth: 'ADMIN' or 'USER', username: 'as', exp: 1683630156, iat: 1683626556} */
+    //         const decodedToken = jwtDecode(token);
+    //         console.log("디코드 정보:", decodedToken);
+    //         const { sub, exp, auth, username, userId } = decodedToken;
+    //         const expireDate = new Date(exp * 1000); // 날짜단위로 변환해서 넣기.
+    //         Cookies.set("access", token, {
+    //             expires: expireDate,
+    //         });
+
+    //         /*  Reducer 에서 토큰 관리할 것임. useName도 Page 넘어갈 때마다 useSelector로 받을 수 있게 넘기는 거
+    //         페이지 넘어갈 때 Reducer에서 토큰 꺼내와서 살아있는지 확인할 거임. */
+    //         dispatch(
+    //             SET_TOKEN({
+    //                 userName: username,
+    //                 role: auth,
+    //                 email: sub,
+    //                 userId,
+    //             })
+    //         );
+    //         // alert(`로그인 성공! 환영합니다 ${name}님`);
+    //         // setIsError({ error: false, message: "" });
+
+    //         // 페이지 이동
+    //         // moveToMainPage();
+    //     } else {
+    //         // console.log(inputs);
+    //         alert("공백은 불가능합니다!");
+    //     }
+    // };
+
     const onLoginHandler = () => {
         if (inputs.id !== "" && inputs.password !== "") {
             mutate2.mutate(inputs);
@@ -42,14 +82,13 @@ export const Login = () => {
     // -------------------------------------------SignIn---------------------------
 
     const mutate2 = useMutation(signInDb, {
-        onMutate: () => {
-            //mutationFunction인 signIndb가 실행되기 전에 실행. mutationFunc가 받을 동일한 변수가 전달됨.
-            // console.log("useMutation의 onMutate, 서버에 요청 시작합니다!");
-        },
+        // onMutate: () => {
+        //     //mutationFunction인 signIndb가 실행되기 전에 실행. mutationFunc가 받을 동일한 변수가 전달됨.
+        //     // console.log("useMutation의 onMutate, 서버에 요청 시작합니다!");
+        // },
         onSuccess: (data) => {
             /* 입력 초기화 */
             onClearInput();
-            const name = data.data.username;
 
             /* 토큰 해체 및 쿠키에 저장. */
             const token = data.headers.authorization.split(" ")[1];
@@ -73,14 +112,11 @@ export const Login = () => {
                     userId,
                 })
             );
-            alert(`로그인 성공! 환영합니다 ${name}님`);
+            // alert(`로그인 성공! 환영합니다 ${name}님`);
             // setIsError({ error: false, message: "" });
 
             // 페이지 이동
-            setTimeout(() => {
-                moveToMainPage();
-            }, 1000);
-            // moveToMainPage();
+            moveToMainPage();
         },
         onError: (error) => {
             console.log(error);
@@ -91,9 +127,10 @@ export const Login = () => {
 
     useEffect(() => {
         if (userId) {
+            console.log("useEffect");
             navigate(-1);
         }
-    });
+    }, []);
 
     return (
         <div className="flex justify-center">

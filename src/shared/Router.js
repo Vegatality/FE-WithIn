@@ -53,8 +53,15 @@ export const Router = () => {
             // 그래서 여기서 한 번 더 쿠키를 decode해서 GlobalState로 만들어주는 것.
             const decodedToken = jwtDecode(checkCookie);
             // console.log("Router", decodedToken);
-            const { sub, auth, username } = decodedToken;
-            dispatch(SET_TOKEN({ userName: username, role: auth, email: sub }));
+            const { sub, auth, username, userId } = decodedToken;
+            dispatch(
+                SET_TOKEN({
+                    userName: username,
+                    role: auth,
+                    email: sub,
+                    userId,
+                })
+            );
         }
         // login에서 강제로 Mypage 버튼을 눌러서 이동하려고 하면 navigate를 사용하게 되는데
         //  이 때 useEffect를 실행하기 위해서 의존성 배열값에 navigate를 넣어주는 것.
