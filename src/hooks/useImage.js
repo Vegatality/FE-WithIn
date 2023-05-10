@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "../api/axios";
 
 export const useImage = (initialImage) => {
   const [image, setImage] = useState(initialImage);
@@ -18,6 +19,15 @@ export const useImage = (initialImage) => {
     if (file.size > maxSize) {
       alert("File size is too large. Please select a file under 3 MB.");
       return;
+    }
+
+    const formData = new FormData();
+    formData.append("imageFile", image);
+    try {
+      const response = await axios.put("/members/1", formData);
+      console.log(response.data);
+    } catch (err) {
+      console.log(err);
     }
 
     const reader = new FileReader();

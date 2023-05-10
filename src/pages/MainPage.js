@@ -1,6 +1,7 @@
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import axios from "../api/axios";
+import useModal from "../hooks/useModal";
 import { MainProfileList } from "../components/MainPage/MainProfileList";
 import { MainProfileCard } from "../components/MainPage/MainProfileCard";
 import { EventSection } from "../components/MainPage/EventSection";
