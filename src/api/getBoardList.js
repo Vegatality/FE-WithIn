@@ -1,8 +1,34 @@
-import axios from "./axios";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 const getBoardList = async () => {
-  const response = await axios.get("/boards");
-  return response;
+    const token = Cookies.get("access");
+    const response = await axios.get(
+        `${process.env.REACT_APP_TEST_SERVER_URL}/boards`,
+        { headers: { authorization: `Bearer ${token}` } }
+    );
+    console.log("response", response);
+    return response;
 };
 
-export { getBoardList };
+const getBoardListPagination = async (pageNumber = 0) => {
+    const token = Cookies.get("access");
+    const response = await axios.get(
+        `${process.env.REACT_APP_TEST_SERVER_URL}/boards?page=${pageNumber}`,
+        { headers: { authorization: `Bearer ${token}` } }
+    );
+    console.log("response", response);
+    return response;
+};
+
+const getBoardProfileList = async (pageNumber = 0) => {
+    const token = Cookies.get("access");
+    const response = await axios.get(
+        `${process.env.REACT_APP_TEST_SERVER_URL}/boards?page=${pageNumber}`,
+        { headers: { authorization: `Bearer ${token}` } }
+    );
+    console.log("response", response);
+    return response;
+};
+
+export { getBoardList, getBoardProfileList };
