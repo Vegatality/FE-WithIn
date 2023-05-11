@@ -10,7 +10,7 @@ export const MainProfileList = ({ children, movePrevPage, moveNextPage }) => {
           <FaChevronLeft className="text-darkPurple text-5xl cursor-pointer hover:text-textPurple" onClick={movePrevPage} />
         </div>
         <div className="w-full">
-          <div className=" grid grid-cols-4 lg:grid-cols-6 gap-2   p-2  auto-cols-max auto-rows-max h-full">{children}</div>
+          <div className=" grid grid-cols-4 lg:grid-cols-6 gap-5   p-2  auto-cols-max auto-rows-max h-full">{children}</div>
         </div>
         <div>
           <FaChevronRight className="text-darkPurple text-5xl cursor-pointer hover:text-textPurple" onClick={moveNextPage} />

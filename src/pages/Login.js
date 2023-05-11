@@ -16,6 +16,7 @@ export const Login = () => {
   //     error: false,
   //     message: "",
   // });
+  const [isMessage, setIsMessage] = useState(false);
   const [inputs, setInputChange, onClearInput] = useInput({
     email: "",
     password: "",
@@ -76,8 +77,13 @@ export const Login = () => {
     if (inputs.id !== "" && inputs.password !== "") {
       mutate2.mutate(inputs);
     } else {
+      setIsMessage(true);
+      toast.error("공백은 불가능합니다!", {
+        position: toast.POSITION.TOP_CENTER,
+        toastId: "empty-comment-toast",
+      });
       // console.log(inputs);
-      alert("공백은 불가능합니다!");
+      // alert("공백은 불가능합니다!");
     }
   };
 
@@ -97,7 +103,7 @@ export const Login = () => {
 
       /*  console.log(jwtDecode(token)); => {sub: 'as@gmail.com', auth: 'ADMIN' or 'USER', username: 'as', exp: 1683630156, iat: 1683626556} */
       const decodedToken = jwtDecode(token);
-      console.log("디코드 정보:", decodedToken);
+      // console.log("디코드 정보:", decodedToken);
       const { sub, exp, auth, username, userId } = decodedToken;
       const expireDate = new Date(exp * 1000); // 날짜단위로 변환해서 넣기.
       Cookies.set("access", token, {
@@ -114,6 +120,11 @@ export const Login = () => {
           userId,
         })
       );
+      setIsMessage(true);
+      toast.success(`로그인 성공! 환영합니다 ${username}님`, {
+        position: toast.POSITION.TOP_CENTER,
+        toastId: "empty-comment-toast",
+      });
       // alert(`로그인 성공! 환영합니다 ${name}님`);
       // setIsError({ error: false, message: "" });
 
@@ -122,14 +133,19 @@ export const Login = () => {
     },
     onError: (error) => {
       console.log(error);
-      alert(error.data.message);
+      setIsMessage(true);
+      toast.error(error.data.message, {
+        position: toast.POSITION.TOP_CENTER,
+        toastId: "empty-comment-toast",
+      });
+      // alert(error.data.message);
       // setIsError({ error: false, message: "" });
     },
   });
 
   useEffect(() => {
     if (userId) {
-      console.log("useEffect");
+      // console.log("useEffect");
       navigate(-1);
     }
   }, []);
@@ -143,6 +159,7 @@ export const Login = () => {
       transition={{ duration: 0.3 }}
     >
       <div className="flex justify-center">
+        {isMessage && <ToastContainer />}
         <div className="rounded-md space-y-6 flex flex-col items-center w-full max-w-xl bg-backgroundPurple py-16 parent text-commonTextColor">
           <div className="text-4xl mb-5 text-commonTextColor font-bold">LOGIN</div>
           <AuthenticationInputCard

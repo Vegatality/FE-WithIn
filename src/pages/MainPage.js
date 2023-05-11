@@ -152,6 +152,7 @@ export const MainPage = () => {
             return <MainProfileCard key={ele.userId} content={ele} />;
           })}
         </MainProfileList>
+
         <ModalComponent onSave={handleSave} />
         {/* {role === "ADMIN" ? (
         <div className="flex flex-row justify-end items-center mt-6">

@@ -10,12 +10,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { DELETE_TOKEN } from "../redux/modules/authSlice";
 import { useQuery } from "react-query";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 function Header() {
   const [headerUserName, setHeaderUserName] = useState({
     role: "회원",
     name: "Jason",
   });
+  const [isMessage, setIsMessage] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -65,7 +67,12 @@ function Header() {
     Cookies.remove("access");
     dispatch(DELETE_TOKEN());
     navigate("/login");
-    alert("로그아웃 완료");
+    setIsMessage(true);
+    toast.success("로그아웃 완료", {
+      position: toast.POSITION.TOP_CENTER,
+      toastId: "empty-comment-toast",
+    });
+    // alert("로그아웃 완료");
   };
 
   const { pathname } = useLocation();
@@ -115,6 +122,7 @@ function Header() {
       className="flex justify-center relative    mx-auto max-w-7xl min-w-[800px] w-screen    bg-mainPurple  rounded-b-lg shadow-md"
       onClick={() => setMemberOption(false)}
     >
+      {isMessage && <ToastContainer />}
       {memberOption && <div className="fixed inset-0" onClick={() => setMemberOption(false)}></div>}
       <div className="flex flex-row justify-between items-center relative w-full mx-5 h-16  pr-2    font-extrabold parent text-white  z-10">
         <img src="/images/white.png" className="h-12 cursor-pointer" alt="photoThumb" onClick={moveToHome} />
