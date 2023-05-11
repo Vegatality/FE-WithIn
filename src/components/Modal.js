@@ -137,7 +137,7 @@ const Modal = ({ isOpen, onClose, onSave }) => {
           </div>
 
           <div className="flex justify-end">
-            <button className="bg-mainPurple text-white px-4 py-2 rounded-lg" onClick={handleSaveClick}>
+            <button className="bg-mainPurple mr-3 text-white px-4 py-2 rounded-lg" onClick={handleSaveClick}>
               Save
             </button>
             <button className="bg-mainPurple text-white px-4 py-2 rounded-lg mr-2" onClick={() => onClose()}>

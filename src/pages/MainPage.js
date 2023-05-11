@@ -95,10 +95,7 @@ export const MainPage = () => {
   }, [profilePageNum]);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      getBoardList();
-    }, 200);
-    return () => clearTimeout(timeout);
+    getBoardList();
   }, [boardPageNum, toggle]);
 
   /* profile */
@@ -148,8 +145,8 @@ export const MainPage = () => {
     });
     // console.log("board data sent", response.data);
   };
-  const handleSave = (data) => {
-    postBoard(data);
+  const handleSave = async (data) => {
+    await postBoard(data);
     setShowSixBoards([]);
     setBoardList({});
     setBoardPageNum(0);
