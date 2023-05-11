@@ -209,7 +209,11 @@ export const BoardCommentCard = ({ comment }) => {
     <motion.div initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -10, opacity: 0 }} transition={{ duration: 0.2 }}>
       <div className="flex mr-3 mt-3">
         <div className="px-2">
-          <div className="rounded-full bg-mainPurple w-12 h-12 shadow-lg"></div>
+          {comment.img ? (
+            <img className="rounded-full bg-mainPurple w-12 h-12 shadow-lg" src={comment.img}></img>
+          ) : (
+            <div className="rounded-full bg-mainPurple w-12 h-12 shadow-lg"></div>
+          )}
         </div>
         <div className="w-full">
           <div className="flex items-center justify-between mb-3 mr-7">

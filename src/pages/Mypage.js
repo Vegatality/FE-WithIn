@@ -15,10 +15,10 @@ export const Mypage = () => {
   const [image, setImage] = useState("");
 
   const { userName, userId } = useSelector((store) => store.auth);
+  const token = Cookies.get("access");
 
   const getOneUserList = async () => {
     console.log("userId", userId);
-    const token = Cookies.get("access");
     const response = await axios.get(`${process.env.REACT_APP_TEST_SERVER_URL}/members/${userId}`, { headers: { authorization: `Bearer ${token}` } });
     console.log("response", response);
     return response.data;
@@ -44,7 +44,7 @@ export const Mypage = () => {
   const editUserInfo = async () => {
     const formData = new FormData();
 
-    const text = JSON.stringify({ username: "username1" });
+    const text = JSON.stringify({ username: name });
     console.log("image", image);
     console.log("name", name);
     const imageBlob = new Blob([image], { type: "image/jpeg" });
@@ -55,6 +55,7 @@ export const Mypage = () => {
     const response = axios.put(`${process.env.REACT_APP_TEST_SERVER_URL}/members/${userId}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
+        authorization: `Bearer ${token}`,
       },
     });
     console.log(response.data);
