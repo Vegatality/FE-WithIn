@@ -7,6 +7,7 @@ import { GiPartyPopper } from "react-icons/gi";
 import { RiEmotionSadFill } from "react-icons/ri";
 import { dateConvert } from "../util/dateConvert";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 // 날짜 변환
 
@@ -27,7 +28,7 @@ export const EventGridCard = ({
 
   return (
     <Link to={`/within/boards/${boardId}`}>
-      <div className="flex flex-col justify-center items-center rounded-lg w-full max-h-fit bg-white shadow-md">
+      <motion.div whileHover={{ scale: 1.05 }} className="flex flex-col justify-center items-center rounded-lg w-full max-h-fit bg-white shadow-md">
         <div className="px-3 py-2 w-full rounded-t-lg bg-backgroundPurple flex justify-between">
           <span className="font-bold">{category}</span>
           <span className="text-sm">{date}</span>
@@ -65,7 +66,7 @@ export const EventGridCard = ({
             {commentLength ? commentLength : <p>&nbsp;</p>}
           </div>
         </div>
-      </div>
+      </motion.div>
     </Link>
   );
 
