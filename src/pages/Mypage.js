@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { MyProfilePicture } from "../components/Mypage/MyProfilePicture";
-import axios from "../api/axios";
+import axios from "axios";
 // import axios from "axios";
 import { useQuery } from "react-query";
 import Cookies from "js-cookie";
@@ -17,13 +17,18 @@ export const Mypage = () => {
 
     const getOneUserList = async () => {
         console.log("userId", userId);
+        const token = Cookies.get("access");
         const response = await axios.get(
-            `${process.env.REACT_APP_TEST_SERVER_URL}/members/${userId}`
+            `${process.env.REACT_APP_TEST_SERVER_URL}/members/${userId}`,
+            { headers: { authorization: `Bearer ${token}` } }
         );
         console.log("response", response);
         return response.data;
     };
-    const { data } = useQuery("mypage", getOneUserList);
+    const { data } = useQuery("mypage", getOneUserList, {
+        refetchOnWindowFocus: false,
+        // staleTime: 600 * 1000,
+    });
 
     const handleNameChange = (event) => {
         setName(event.target.value);

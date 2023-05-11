@@ -12,9 +12,10 @@ import { useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
-import axios from "../api/axios";
+import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { dateConvert } from "../components/util/dateConvert";
+import Cookies from "js-cookie";
 
 export const BoardDetails = () => {
     const [liked, setLiked] = useState(false);
@@ -27,7 +28,15 @@ export const BoardDetails = () => {
     const queryClient = useQueryClient();
 
     const getBoardDetail = async () => {
-        const response = await axios.get(`/boards/${params.id}`);
+        const token = Cookies.get("access");
+        const response = await axios.get(
+            `${process.env.REACT_APP_TEST_SERVER_URL}/boards/${params.id}`,
+            {
+                headers: {
+                    authorization: `Bearer ${token}`,
+                },
+            }
+        );
         console.log(response.data);
         return response.data;
     };

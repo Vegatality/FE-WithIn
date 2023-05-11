@@ -1,6 +1,5 @@
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
-import axios from "../api/axios";
 import useModal from "../hooks/useModal";
 import { MainProfileList } from "../components/MainPage/MainProfileList";
 import { MainProfileCard } from "../components/MainPage/MainProfileCard";
@@ -14,6 +13,7 @@ import { getBoardList, getBoardProfileList } from "../api/getBoardList";
 import jwtDecode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { SET_PAGES } from "../redux/modules/pageSlice";
+import axios from "axios";
 
 export const MainPage = () => {
     const [ModalComponent, openModal, closeModal] = useModal();
@@ -115,12 +115,12 @@ export const MainPage = () => {
 
     // const navigate = useNavigate();
     // const token = Cookies.get("access");
-    const query1 = useQuery("profile", getBoardProfileList, {
+    const query1 = useQuery("profile", () => getBoardProfileList(), {
         refetchOnWindowFocus: false,
     });
     const { isLoading, isError, data, error } = useQuery(
         "board",
-        getBoardList,
+        () => getBoardList(),
         {
             // enabled: !!token,
             retry: false,
@@ -162,8 +162,13 @@ export const MainPage = () => {
     );
 
     const postBoard = async (data) => {
+        const token = Cookies.get("access");
         const stringifiedData = JSON.stringify(data);
-        const response = await axios.post("/boards", stringifiedData);
+        const response = await axios.post(
+            `${process.env.REACT_APP_TEST_SERVER_URL}/boards`,
+            stringifiedData,
+            { headers: { authorization: `Bearer ${token}` } }
+        );
         console.log("board data sent", response.data);
     };
     const handleSave = (data) => {
