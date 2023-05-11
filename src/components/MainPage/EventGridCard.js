@@ -30,19 +30,19 @@ export const EventGridCard = ({
       <div className="flex flex-col justify-center items-center rounded-lg w-full max-h-fit bg-white shadow-md">
         <div className="px-3 py-2 w-full rounded-t-lg bg-backgroundPurple flex justify-between">
           <span className="font-bold">{category}</span>
-          <span>{date}</span>
+          <span className="text-sm">{date}</span>
         </div>
 
-        <div className="relative flex justify-center items-center w-20 h-20 mt-4">
+        <div className="relative flex justify-center items-center w-24 h-24 mt-4">
           {image ? (
             <img className="w-full h-full rounded-full object-cover shadow-md" src={image} alt="" />
           ) : (
-            <div className=" w-20 h-20 rounded-full bg-mainPurple flex items-center justify-center shadow-md">
+            <div className=" w-24 h-24 rounded-full bg-mainPurple flex items-center justify-center shadow-md">
               <FontAwesomeIcon icon={faUser} size="2x" className=" text-white" />
             </div>
           )}
         </div>
-        <div className="text-center text-xl my-2 w-full truncate px-3">{title}</div>
+        <div className="text-center font-bold text-md my-3 w-full truncate px-3">{title}</div>
         <div className="flex flex-row justify-between w-full  p-2 rounded-b-lg bg-backgroundPurple">
           <div className="flex flex-row justify-between items-center gap-2">
             <div className="flex flex-row justify-between items-center gap-1">
