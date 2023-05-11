@@ -48,13 +48,12 @@ export const EventGridCard = ({
               <AiFillHeart style={likeCnt ? { color: "red" } : { color: "white" }} />
               <p>{likeCnt ? likeCnt : <p>&nbsp;</p>}</p>
             </div>
-
             <div className="flex flex-row justify-between items-center gap-1">
-              <GiPartyPopper style={sadCnt ? { color: "#fcaaa1" } : { color: "white" }} />
+              <RiEmotionSadFill style={congratulationCnt ? { color: "#6d93ff" } : { color: "white" }} />
               {sadCnt ? sadCnt : <p>&nbsp;</p>}
             </div>
             <div className="flex flex-row justify-between items-center gap-1">
-              <RiEmotionSadFill style={congratulationCnt ? { color: "#6d93ff" } : { color: "white" }} />
+              <GiPartyPopper style={sadCnt ? { color: "#fcaaa1" } : { color: "white" }} />
               {congratulationCnt ? congratulationCnt : <p>&nbsp;</p>}
             </div>
           </div>
