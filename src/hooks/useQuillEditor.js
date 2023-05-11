@@ -2,10 +2,10 @@ import { useState } from "react";
 import ReactQuill from "react-quill";
 
 const useQuill = (initialValue = "") => {
-  const [value, setValue] = useState(initialValue);
+  const [quillValue, setQuillValue] = useState(initialValue);
 
-  const handleChange = (newValue) => {
-    setValue(newValue);
+  const handleQuillChange = (newValue) => {
+    setQuillValue(newValue);
   };
 
   const toolbar = {
@@ -13,11 +13,22 @@ const useQuill = (initialValue = "") => {
     handlers: {},
   };
 
-  const renderQuill = () => (
-    <ReactQuill className=" bg-white rounded-sm shadow-md max-h-sm" defaultValue={value} onChange={handleChange} modules={{ toolbar }} />
+  const renderQuill = (plain) => (
+    <ReactQuill
+      className="bg-white rounded shadow max-h-sm"
+      defaultValue={quillValue}
+      onChange={handleQuillChange}
+      modules={
+        plain
+          ? {
+              toolbar: false, // Set toolbar to false to hide it
+            }
+          : { toolbar }
+      }
+    />
   );
 
-  return { value, renderQuill };
+  return { quillValue, renderQuill, setQuillValue };
 };
 
 export default useQuill;
