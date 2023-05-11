@@ -200,8 +200,8 @@ export const BoardCommentCard = ({ comment }) => {
 
   useEffect(() => {
     if (comment) {
-      console.log(comment.username, userName);
-      console.log(comment.username === userName);
+      // console.log(comment.username, userName);
+      // console.log(comment.username === userName);
       setLiked(comment.likeCheck);
       setSad(comment.sadCheck);
       setGrats(comment.congratulationCheck);
