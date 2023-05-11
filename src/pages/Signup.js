@@ -56,11 +56,11 @@ export const Signup = () => {
       onClearCheckPassword();
       setIsAdmin(false);
       // 회원가입 성공하면 바로 로그인 창으로
-      setIsMessage(true);
-      toast.success("로그인 성공!", {
-        position: toast.POSITION.TOP_CENTER,
-        toastId: "empty-comment-toast",
-      });
+      //   setIsMessage(true);
+      //   toast.success("로그인 성공!", {
+      //     position: toast.POSITION.TOP_CENTER,
+      //     toastId: "empty-comment-toast",
+      //   });
       movetoLogin();
     },
     onError: (error) => {

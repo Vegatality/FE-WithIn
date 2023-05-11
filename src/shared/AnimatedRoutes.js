@@ -33,13 +33,13 @@ export const AnimatedRoutes = () => {
     // 문제점: 회원가입에서 그냥 뒤로가기 눌러서 로그인으로 이동하려고 할 때 alert동작하는 문제.
     // 해결방법 : 조건문에 !== "/login" 도 추가해줬다
     if (!checkCookie && !checkAuth && pathname !== "/signup" && pathname !== "/login") {
-      alert("접속 권한이 없습니다. 로그인 해주세요.");
+      // alert("접속 권한이 없습니다. 로그인 해주세요.");
       navigate("/login");
       // 토큰 유효시간이 만료되는 경우(이 때 리덕스에서는 authenticated는 true)
     } else if (!checkCookie && checkAuth) {
       navigate("/login");
       dispatch(DELETE_TOKEN());
-      alert("토큰이 만료되었습니다. 다시 로그인 해주세요.");
+      // alert("토큰이 만료되었습니다. 다시 로그인 해주세요.");
 
       // 문제점: 그냥 pathname !== "/signup" 에서는 만약 "/login" 에 있었을 때도 토큰을 확인해서 decode해버리는 문제가 발생
       // 해결방법: 앞에 checkCookie && !checkAuth  조건문 더 추가함.

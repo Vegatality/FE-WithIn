@@ -52,7 +52,7 @@ export const Mypage = () => {
 
     formData.append("imageFile", imageBlob, "image.jpg");
     formData.append("userPageRequestDto", textBlob);
-    const response = axios.put(`/members/${userId}`, formData, {
+    const response = axios.put(`${process.env.REACT_APP_TEST_SERVER_URL}/members/${userId}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

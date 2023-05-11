@@ -20,6 +20,7 @@ export const EventGridCard = ({
   title,
   image,
   boardId,
+  category,
 }) => {
   // console.log(date, commentLength, congratulationCnt, likeCnt, sadCnt, title);
   const date = dateConvert(createdTime);
@@ -29,6 +30,7 @@ export const EventGridCard = ({
       <div className="flex flex-col justify-center items-center rounded-lg w-full max-h-fit bg-white shadow-md">
         <div className="text-right pr-2 py-2 w-full rounded-t-lg bg-backgroundPurple">
           <span>{date}</span>
+          <span>{category}</span>
         </div>
         <div className="relative flex justify-center items-center w-20 h-20 mt-4">
           {image ? (

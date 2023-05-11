@@ -179,6 +179,7 @@ export const MainPage = () => {
                   sadCnt={card.sadCnt}
                   congratulationCnt={card.congratulationCnt}
                   commentLength={card.commentResponseDtoList ? card.commentResponseDtoList.length : 0}
+                  category={card.category}
                 />
               );
             })}
