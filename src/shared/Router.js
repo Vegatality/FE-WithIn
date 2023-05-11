@@ -12,7 +12,6 @@ import { checkAuth } from "../api/auth";
 import { useEffect } from "react";
 import jwtDecode from "jwt-decode";
 import { DELETE_TOKEN, SET_TOKEN } from "../redux/modules/authSlice";
-import { ImageTest } from "../pages/ImageTest";
 
 export const Router = () => {
     // 페이지 넘어갈 때마다 쿠키가 살아있는지 리덕스에서 꺼내와서 확인한다.
@@ -73,7 +72,6 @@ export const Router = () => {
             <Routes>
                 <Route path="/" element={<MainPage />} />
                 <Route path="/signup" element={<Signup />} />
-                <Route path="/imagetest" element={<ImageTest />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/mypage" element={<Mypage />} />
                 <Route path="/within/boards/:id" element={<BoardDetails />} />

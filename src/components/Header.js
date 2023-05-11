@@ -8,7 +8,7 @@ import { ImProfile } from "react-icons/im";
 import { useDispatch, useSelector } from "react-redux";
 import { DELETE_TOKEN } from "../redux/modules/authSlice";
 import { useQuery } from "react-query";
-import axios from "../api/axios";
+import axios from "axios";
 
 function Header() {
     const [headerUserName, setHeaderUserName] = useState({
@@ -28,7 +28,8 @@ function Header() {
         const token = Cookies.get("access");
         const decodedToken = jwtDecode(token);
         const response = await axios.get(
-            `${process.env.REACT_APP_TEST_SERVER_URL}/members/${decodedToken.userId}`
+            `${process.env.REACT_APP_TEST_SERVER_URL}/members/${decodedToken.userId}`,
+            { headers: { authorization: `Bearer ${token}` } }
         );
         console.log("response", response);
         return response.data;

@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 import DOMPurify from "dompurify";
-import axios from "../../api/axios";
+import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import { throttle } from "lodash";
@@ -15,6 +15,7 @@ import { RiEmotionSadFill } from "react-icons/ri";
 import { GiPartyPopper } from "react-icons/gi";
 import { dateConvert } from "../util/dateConvert";
 import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
 
 export const BoardCommentCard = ({ comment }) => {
     // console.log(comment);
@@ -40,11 +41,15 @@ export const BoardCommentCard = ({ comment }) => {
 
     const putEditedComment = async (newText) => {
         try {
+            const token = Cookies.get("access");
             const response = await axios.put(
-                `/boards/${params.id}/comments/${comment.commentId}`,
+                `${process.env.REACT_APP_TEST_SERVER_URL}/boards/${params.id}/comments/${comment.commentId}`,
                 { comment: newText },
                 {
-                    headers: { "Content-Type": "application/json" },
+                    headers: {
+                        "Content-Type": "application/json",
+                        authorization: `Bearer ${token}`,
+                    },
                 }
             );
             console.log(response.data);
@@ -168,11 +173,12 @@ export const BoardCommentCard = ({ comment }) => {
 
     useEffect(() => {
         if (comment) {
+            console.log(comment.userName === userName);
             setLiked(comment.likeCheck);
             setSad(comment.sadCheck);
             setGrats(comment.congratulationCheck);
         }
-    }, [comment]);
+    }, [comment, userName]);
     return (
         <motion.div
             initial={{ y: -10, opacity: 0 }}

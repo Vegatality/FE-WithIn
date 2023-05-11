@@ -2,13 +2,45 @@ import { useImage } from "../../hooks/useImage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
-import axios from "../../api/axios";
+import axios from "axios";
 import { useSelector } from "react-redux";
-
+import { useMutation, useQueryClient } from "react-query";
+import Cookies from "js-cookie";
 export const MyProfilePicture = ({ image }) => {
     const { userName, userId } = useSelector((store) => store.auth);
     const [view, setView] = useState(image);
+    const queryClient = useQueryClient();
 
+    const putImageApi = async (file) => {
+        try {
+            const formData = new FormData();
+            const token = Cookies.get("access");
+            const text = JSON.stringify({ username: userName });
+            const imageBlob = new Blob([file], { type: "image/jpeg" });
+            const textBlob = new Blob([text], { type: "application/json" });
+
+            formData.append("imageFile", imageBlob, "image.jpg");
+            formData.append("userPageRequestDto", textBlob);
+            const response = await axios.put(
+                `${process.env.REACT_APP_TEST_SERVER_URL}/members/${userId}`,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                        authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            console.log(response.data);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+    const imageMutation = useMutation(putImageApi, {
+        onSuccess: () => {
+            queryClient.invalidateQueries(`mypage`);
+        },
+    });
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (!file) return;
@@ -28,25 +60,7 @@ export const MyProfilePicture = ({ image }) => {
         }
         console.log(file);
 
-        try {
-            const formData = new FormData();
-
-            const text = JSON.stringify({ username: userName });
-            const imageBlob = new Blob([file], { type: "image/jpeg" });
-            const textBlob = new Blob([text], { type: "application/json" });
-
-            formData.append("imageFile", imageBlob, "image.jpg");
-            formData.append("userPageRequestDto", textBlob);
-            const response = axios.put(`/members/${userId}`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
-            console.log(response.data);
-        } catch (err) {
-            console.log(err);
-        }
-
+        imageMutation.mutate(file);
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
