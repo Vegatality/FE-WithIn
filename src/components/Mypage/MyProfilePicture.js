@@ -27,7 +27,7 @@ export const MyProfilePicture = ({ image }) => {
           authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data);
+      // console.log(response.data);
     } catch (err) {
       console.log(err);
     }
@@ -54,7 +54,7 @@ export const MyProfilePicture = ({ image }) => {
       alert("File size is too large. Please select a file under 3 MB.");
       return;
     }
-    console.log(file);
+    // console.log(file);
 
     imageMutation.mutate(file);
     const reader = new FileReader();

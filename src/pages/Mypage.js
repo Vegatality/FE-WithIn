@@ -15,12 +15,12 @@ export const Mypage = () => {
   const [image, setImage] = useState("");
 
   const { userName, userId } = useSelector((store) => store.auth);
+  const token = Cookies.get("access");
 
   const getOneUserList = async () => {
-    console.log("userId", userId);
-    const token = Cookies.get("access");
+    // console.log("userId", userId);
     const response = await axios.get(`${process.env.REACT_APP_TEST_SERVER_URL}/members/${userId}`, { headers: { authorization: `Bearer ${token}` } });
-    console.log("response", response);
+    // console.log("response", response);
     return response.data;
   };
   const { data } = useQuery("mypage", getOneUserList, {
@@ -44,9 +44,9 @@ export const Mypage = () => {
   const editUserInfo = async () => {
     const formData = new FormData();
 
-    const text = JSON.stringify({ username: "username1" });
-    console.log("image", image);
-    console.log("name", name);
+    const text = JSON.stringify({ username: name });
+    // console.log("image", image);
+    // console.log("name", name);
     const imageBlob = new Blob([image], { type: "image/jpeg" });
     const textBlob = new Blob([text], { type: "application/json" });
 
@@ -55,9 +55,10 @@ export const Mypage = () => {
     const response = axios.put(`${process.env.REACT_APP_TEST_SERVER_URL}/members/${userId}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
+        authorization: `Bearer ${token}`,
       },
     });
-    console.log(response.data);
+    // console.log(response.data);
   };
   const handleSaveClick = () => {
     if (name.trim() !== "") {
@@ -69,7 +70,7 @@ export const Mypage = () => {
 
   useEffect(() => {
     if (data) {
-      console.log(data);
+      //   console.log(data);
       setName(data.username);
       setEmail(data.email);
       setImage(data.img);
@@ -88,10 +89,10 @@ export const Mypage = () => {
             {/* Username */}
             <div className="mb-2">
               <div className="flex justify-between">
-                <lable className="font-bold text-lg mb-2" htmlFor="name">
+                <label className="font-bold text-lg mb-2" htmlFor="name">
                   Name
-                </lable>
-                <div className="flex">
+                </label>
+                {/* <div className="flex">
                   {editMode && (
                     <button className="clickableTextStyle" onClick={handleSaveClick}>
                       Save
@@ -100,7 +101,7 @@ export const Mypage = () => {
                   <button className="clickableTextStyle" onClick={handleEditClick}>
                     {editMode ? "Cancel" : "Edit"}
                   </button>
-                </div>
+                </div> */}
               </div>
               {editMode ? (
                 <input

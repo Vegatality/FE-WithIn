@@ -33,7 +33,7 @@ function Header() {
     const response = await axios.get(`${process.env.REACT_APP_TEST_SERVER_URL}/members/${decodedToken.userId}`, {
       headers: { authorization: `Bearer ${token}` },
     });
-    console.log("response", response);
+    // console.log("response", response);
     return response.data;
   };
   const { data } = useQuery("mypage", getOneUserList, {
@@ -43,7 +43,7 @@ function Header() {
 
   useEffect(() => {
     if (data) {
-      console.log(data);
+      //   console.log(data);
       setImage(data.img);
     }
   }, [data]);
@@ -144,7 +144,13 @@ function Header() {
                 />
               ) : (
                 <div className="bg-backgroundPurple rounded-full">
-                  <CgProfile className="text-4xl  text-textPurple cursor-pointer" onClick={() => setMemberOption(!memberOption)} />
+                  <CgProfile
+                    className="text-4xl  text-textPurple cursor-pointer"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setMemberOption(!memberOption);
+                    }}
+                  />
                 </div>
               )}
             </div>

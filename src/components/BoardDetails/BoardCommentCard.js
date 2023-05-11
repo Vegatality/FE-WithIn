@@ -16,6 +16,8 @@ import { GiPartyPopper } from "react-icons/gi";
 import { dateConvert } from "../util/dateConvert";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 export const BoardCommentCard = ({ comment }) => {
   // console.log(comment);
@@ -51,7 +53,7 @@ export const BoardCommentCard = ({ comment }) => {
           },
         }
       );
-      console.log(response.data);
+      //   console.log(response.data);
     } catch (err) {
       // console.log(err);
     }
@@ -208,10 +210,16 @@ export const BoardCommentCard = ({ comment }) => {
   return (
     <motion.div initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -10, opacity: 0 }} transition={{ duration: 0.2 }}>
       <div className="flex mr-3 mt-3">
-        <div className="px-2">
-          <div className="rounded-full bg-mainPurple w-12 h-12 shadow-lg"></div>
+        <div className="flex justify-center items-center w-12 h-12 rounded-full">
+          {comment.img ? (
+            <img className="w-full h-full rounded-full object-cover shadow-md " src={comment.img} alt="Profile" />
+          ) : (
+            <div className="flex justify-center items-center rounded-full bg-mainPurple w-12 h-12 shadow-lg">
+              <FontAwesomeIcon icon={faUser} className=" text-white" />
+            </div>
+          )}
         </div>
-        <div className="w-full">
+        <div className="w-full ml-2">
           <div className="flex items-center justify-between mb-3 mr-7">
             <div className="flex items-center">
               <h3 className="font-bold text-sm">{comment.username}</h3>

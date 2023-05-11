@@ -30,13 +30,14 @@ export const BoardDetails = () => {
   const params = useParams();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { userId } = useSelector((store) => store.auth);
   const getBoardDetail = async () => {
     const response = await axios.get(`${process.env.REACT_APP_TEST_SERVER_URL}/boards/${params.id}`, {
       headers: {
         authorization: `Bearer ${token}`,
       },
     });
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   };
   const deleteBoardDetail = async () => {
@@ -46,10 +47,10 @@ export const BoardDetails = () => {
           authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data);
+      //   console.log(response.data);
       navigate("/");
     } catch (err) {
-      console.log(err);
+      //   console.log(err);
     }
   };
   const { data } = useQuery(`${params.id}`, getBoardDetail, {
@@ -68,7 +69,7 @@ export const BoardDetails = () => {
           },
         }
       );
-      console.log(response.data);
+      //   console.log(response.data);
     } catch (err) {
       console.log(err);
     }
@@ -84,7 +85,7 @@ export const BoardDetails = () => {
           },
         }
       );
-      console.log(response.data);
+      //   console.log(response.data);
     } catch (err) {
       console.log(err);
     }
@@ -100,7 +101,7 @@ export const BoardDetails = () => {
           },
         }
       );
-      console.log(response.data);
+      //   console.log(response.data);
     } catch (err) {
       console.log(err);
     }
@@ -154,7 +155,7 @@ export const BoardDetails = () => {
       const formData = new FormData();
       const token = Cookies.get("access");
       const text = JSON.stringify({ title: editedTitle, contents: quillValue, category: board.category });
-      console.log("board", text);
+      //   console.log("board", text);
       const imageBlob = new Blob([image], { type: "image/jpeg" });
       const textBlob = new Blob([text], { type: "application/json" });
 
@@ -166,7 +167,7 @@ export const BoardDetails = () => {
           authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data);
+      //   console.log(response.data);
     } catch (err) {
       console.log(err);
     }
@@ -193,7 +194,7 @@ export const BoardDetails = () => {
       alert("File size is too large. Please select a file under 3 MB.");
       return;
     }
-    console.log(file);
+    // console.log(file);
 
     setImage(file);
     const reader = new FileReader();
@@ -239,13 +240,16 @@ export const BoardDetails = () => {
               <span className="p-2 text-darkPurple text-sm rounded-br rounded-tl">{dateConvert(data.createdTime)}</span>
             </div>
           )}
-
-          <button className="clickableTextStyle absolute top-14 left-2 px-2 bg-sectionPurple rounded" onClick={deleteBoardDetail}>
-            Delete Post
-          </button>
-          <button className="clickableTextStyle absolute top-14 right-4" onClick={toggleEditMode}>
-            {editMode ? "Save" : "Edit"}
-          </button>
+          {data && data.userId === userId ? (
+            <button className="clickableTextStyle absolute top-14 left-2 px-2 bg-sectionPurple rounded" onClick={deleteBoardDetail}>
+              Delete Post
+            </button>
+          ) : null}
+          {data && data.userId === userId ? (
+            <button className="clickableTextStyle absolute top-14 right-4" onClick={toggleEditMode}>
+              {editMode ? "Save" : "Edit"}
+            </button>
+          ) : null}
 
           <div className="flex relative justify-center rounded-full items-center mb-4 mt-12  w-40 h-40">
             {editMode && (

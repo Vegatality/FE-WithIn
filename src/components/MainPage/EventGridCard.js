@@ -28,10 +28,11 @@ export const EventGridCard = ({
   return (
     <Link to={`/within/boards/${boardId}`}>
       <div className="flex flex-col justify-center items-center rounded-lg w-full max-h-fit bg-white shadow-md">
-        <div className="text-right pr-2 py-2 w-full rounded-t-lg bg-backgroundPurple">
+        <div className="px-3 py-2 w-full rounded-t-lg bg-backgroundPurple flex justify-between">
+          <span className="font-bold">{category}</span>
           <span>{date}</span>
-          <span>{category}</span>
         </div>
+
         <div className="relative flex justify-center items-center w-20 h-20 mt-4">
           {image ? (
             <img className="w-full h-full rounded-full object-cover shadow-md" src={image} alt="" />
@@ -46,21 +47,21 @@ export const EventGridCard = ({
           <div className="flex flex-row justify-between items-center gap-2">
             <div className="flex flex-row justify-between items-center gap-1">
               <AiFillHeart style={likeCnt ? { color: "red" } : { color: "white" }} />
-              <p>{likeCnt ? likeCnt : <p>&nbsp;</p>}</p>
+              {likeCnt ? likeCnt : <span>&nbsp;</span>}
             </div>
             <div className="flex flex-row justify-between items-center gap-1">
-              <RiEmotionSadFill style={congratulationCnt ? { color: "#6d93ff" } : { color: "white" }} />
+              <RiEmotionSadFill style={sadCnt ? { color: "#6d93ff" } : { color: "white" }} />
               {sadCnt ? sadCnt : <p>&nbsp;</p>}
             </div>
             <div className="flex flex-row justify-between items-center gap-1">
-              <GiPartyPopper style={sadCnt ? { color: "#fcaaa1" } : { color: "white" }} />
+              <GiPartyPopper style={congratulationCnt ? { color: "#fcaaa1" } : { color: "white" }} />
               {congratulationCnt ? congratulationCnt : <p>&nbsp;</p>}
             </div>
           </div>
 
           <div className="flex flex-row justify-between items-center gap-1">
             <FaCommentDots className={`${commentLength ? "text-darkPurple" : "hidden"}`} />
-            <p>{commentLength ? commentLength : <p>&nbsp;</p>}</p>
+            {commentLength ? commentLength : <p>&nbsp;</p>}
           </div>
         </div>
       </div>

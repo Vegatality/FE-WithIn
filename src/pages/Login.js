@@ -132,7 +132,7 @@ export const Login = () => {
       moveToMainPage();
     },
     onError: (error) => {
-      console.log(error);
+      //   console.log(error);
       setIsMessage(true);
       toast.error(error.data.message, {
         position: toast.POSITION.TOP_CENTER,

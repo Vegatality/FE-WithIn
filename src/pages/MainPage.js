@@ -37,6 +37,8 @@ export const MainPage = () => {
   const [profilePageNum, setProfilePageNum] = useState(0);
   const [boardPageNum, setBoardPageNum] = useState(0);
 
+  const [toggle, setToggle] = useState(true);
+
   /* 확인사항 */
   // 1.  1페이지에서 콘텐츠를 한 개 삭제를 했을 때 서버에서 2페이지에 있던 콘텐츠 하나가 1페이지로 끌어올려져서 다시
   //     1페이지가 6개가 되는지.
@@ -55,7 +57,7 @@ export const MainPage = () => {
       const response = await axios.get(`${process.env.REACT_APP_TEST_SERVER_URL}/members?page=${profilePageNum}`, {
         headers: { authorization: `Bearer ${token}` },
       });
-      console.log("profile >>> ", response.data);
+      // console.log("profile >>> ", response.data);
       setTotalProfilesPages(response.data.totalPages);
       setProfileList((previousProfiles) => ({ ...previousProfiles, [profilePageNum]: response.data.content }));
       setShowSixProfiles(response.data.content);
@@ -66,6 +68,11 @@ export const MainPage = () => {
     //   console.log("response", response);
     // return response;
   };
+  const { data } = useQuery("boardList", getProfileList, {
+    refetchOnWindowFocus: false,
+    // staleTime: 600 * 1000,
+  });
+
   const getBoardList = async () => {
     if (!boardList[boardPageNum]) {
       const token = Cookies.get("access");
@@ -75,7 +82,7 @@ export const MainPage = () => {
       setTotalBoardsPages(response.data.totalPages);
       setBoardList((previousBoard) => ({ ...previousBoard, [boardPageNum]: response.data.content }));
       setShowSixBoards(response.data.content);
-      console.log(response);
+      // console.log(response);
     } else {
       setShowSixBoards(boardList[boardPageNum]);
     }
@@ -88,8 +95,11 @@ export const MainPage = () => {
   }, [profilePageNum]);
 
   useEffect(() => {
-    getBoardList();
-  }, [boardPageNum]);
+    const timeout = setTimeout(() => {
+      getBoardList();
+    }, 200);
+    return () => clearTimeout(timeout);
+  }, [boardPageNum, toggle]);
 
   /* profile */
   const movePrevProfilePage = () => {
@@ -132,14 +142,19 @@ export const MainPage = () => {
   // ## CheckPoint ##
   const postBoard = async (data) => {
     const token = Cookies.get("access");
-    console.log("data", data);
+    // console.log("data", data);
     const response = await axios.post(`${process.env.REACT_APP_TEST_SERVER_URL}/boards`, data, {
       headers: { authorization: `Bearer ${token}` },
     });
-    console.log("board data sent", response.data);
+    // console.log("board data sent", response.data);
   };
   const handleSave = (data) => {
     postBoard(data);
+    setShowSixBoards([]);
+    setBoardList({});
+    setBoardPageNum(0);
+    setToggle(!toggle);
+
     // console.log(data);
     closeModal();
   };

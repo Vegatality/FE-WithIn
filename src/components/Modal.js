@@ -4,6 +4,7 @@ import { MyProfilePicture } from "./Mypage/MyProfilePicture";
 import Select from "react-select";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { convertHtmlToText } from "./util/convertHtmlToText";
 const Modal = ({ isOpen, onClose, onSave }) => {
   const [eventType, setEventType] = useState("Event");
   const [title, setTitle] = useState("");
@@ -47,7 +48,7 @@ const Modal = ({ isOpen, onClose, onSave }) => {
       alert("File size is too large. Please select a file under 3 MB.");
       return;
     }
-    console.log(file);
+    // console.log(file);
 
     setImage(file);
     const reader = new FileReader();
@@ -58,15 +59,25 @@ const Modal = ({ isOpen, onClose, onSave }) => {
   };
 
   const handleSaveClick = () => {
+    const inputTitle = convertHtmlToText(title);
+    const inputQuill = convertHtmlToText(quillValue);
+    if (inputTitle.trim() === "") {
+      alert("Please input Title");
+      return;
+    }
+    if (inputQuill.trim() === "") {
+      alert("Please input Title");
+      return;
+    }
     const formData = new FormData();
     const text = JSON.stringify({ title: title, contents: quillValue, category: selected.value });
     const imageBlob = new Blob([image], { type: "image/jpeg" });
     const textBlob = new Blob([text], { type: "application/json" });
-    console.log("text", text);
+    // console.log("text", text);
     formData.append("imageFile", imageBlob, "image.jpg");
     formData.append("boardRequestDto", textBlob);
     onSave(formData);
-    console.log("click");
+    // console.log("click");
   };
   const options = [
     { value: "Goodbye", label: "Goodbye" },

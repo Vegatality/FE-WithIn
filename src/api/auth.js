@@ -31,30 +31,30 @@ import Cookies from "js-cookie";
 /* 회원가입 */
 // axios 옵션 객체로 넣기
 const signUpDb = async (inputs) => {
-    await axios.post(
-        `${process.env.REACT_APP_TEST_SERVER_URL}/signup`,
-        inputs
-        // {
-        //     headers: {
-        //         withCredentials: true, // 쿠키 cors 통신 설정
-        //     },
-        // }
-    );
+  await axios.post(
+    `${process.env.REACT_APP_TEST_SERVER_URL}/signup`,
+    inputs
+    // {
+    //     headers: {
+    //         withCredentials: true, // 쿠키 cors 통신 설정
+    //     },
+    // }
+  );
 };
 
 /* 로그인 */
 const signInDb = async (inputs) => {
-    const response = await axios.post(
-        `${process.env.REACT_APP_TEST_SERVER_URL}/login`,
-        inputs
-        // {
-        //     headers: {
-        //         withCredentials: true, // 쿠키 cors 통신 설정
-        //     },
-        // }
-    );
-    console.log(response);
-    return response;
+  const response = await axios.post(
+    `${process.env.REACT_APP_TEST_SERVER_URL}/login`,
+    inputs
+    // {
+    //     headers: {
+    //         withCredentials: true, // 쿠키 cors 통신 설정
+    //     },
+    // }
+  );
+  // console.log(response);
+  return response;
 };
 
 export { signUpDb, signInDb };
