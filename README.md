@@ -13,6 +13,11 @@
 [위드인](https://youtu.be/RjCjnegmI1c)
 
 
+## 👨‍💻 Use Case
+---------------------------------------
+![WithIn Use Case](https://user-images.githubusercontent.com/128972031/236847024-964ad7dd-45ce-4fc8-91f7-b2c3e9740a95.PNG)
+
+
 ✨우리 팀을 소개합니다
 ---------------------------------------
 | 역할 | 이름 | GitHub |
