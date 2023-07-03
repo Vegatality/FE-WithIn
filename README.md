@@ -10,7 +10,7 @@
 - 2023년 5월 5일 ~ 2023년 5월 11일
 
 ## 🎥 시연 영상(유튜브) ## 
-[![위드인](https://youtu.be/RjCjnegmI1c)
+[위드인](https://youtu.be/RjCjnegmI1c)
 
 
 ✨우리 팀을 소개합니다
