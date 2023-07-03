@@ -10,7 +10,7 @@
 - 2023년 5월 5일 ~ 2023년 5월 11일
 
 ## 🎥 시연 영상(유튜브) ## 
-[![위드인](![b04f59fd-60a2-497e-8208-0056f4e15526](https://github.com/Vegatality/level-4-TodoBook/assets/123563774/175643b3-1b8d-4526-9611-0072b3ea5ef6)
+[![위드인](![b04f59fd-60a2-497e-8208-0056f4e15526](https://github.com/Vegatality/level-4-TodoBook/assets/123563774/692ecff5-03f4-4123-b760-403b5fd0b8c0)
 )](https://youtu.be/RjCjnegmI1c)
 
 
