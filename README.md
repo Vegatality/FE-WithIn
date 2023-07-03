@@ -12,14 +12,12 @@
 ## 🎥 시연 영상 링크(유튜브) ## 
 [위드인](https://youtu.be/RjCjnegmI1c)
 
+## ⚙️ FE Architecture
+![image](https://github.com/Vegatality/Studyarea/assets/123563774/c3a55e77-4e6a-42c1-af35-bd5a3acb8788)
 
 ## 👨‍💻 Use Case
 ---------------------------------------
 ![WithIn Use Case](https://user-images.githubusercontent.com/128972031/236847024-964ad7dd-45ce-4fc8-91f7-b2c3e9740a95.PNG)
-
-## ⚙️ FE Architecture
-![image](https://github.com/Vegatality/Studyarea/assets/123563774/c3a55e77-4e6a-42c1-af35-bd5a3acb8788)
-
 
 ✨우리 팀을 소개합니다
 ---------------------------------------
