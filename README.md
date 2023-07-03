@@ -14,8 +14,7 @@
 | 역할 | 이름 | GitHub |
 | ------ | -- | ----|
 | Front-end | 배정현 | https://github.com/JungHBae|
-| Front-end | 조형민 | https://github.com/Vegatality|
-| Front-end | 김지호 | https://github.com/nevertheless1031| 
+| Front-end | 조형민 | https://github.com/Vegatality| 
 | Back-end | 송현진 |  https://github.com/SongHyeonJin|
 | Back-end | 이동규 | https://github.com/dongk96|
 | Back-end | 지현경 | https://github.com/Jello92|
